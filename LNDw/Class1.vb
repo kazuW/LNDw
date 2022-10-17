@@ -333,3 +333,65 @@ Public Class node_info
 
 End Class
 
+Public Class mc_cfg
+
+    Private _halfLifeSeconds As String
+    Private _hopProbability As Double
+    Private _weight As Double
+    Private _maxPaymentResults As Int64
+    Private _minFailRelaxInterval As String
+
+
+    'HalfLifeSeconds
+    Public Property HalfLifeSeconds() As String
+        Get
+            Return Me._halfLifeSeconds
+        End Get
+        Set(ByVal value As String)
+            Me._halfLifeSeconds = value
+        End Set
+    End Property
+
+    'HopProbability
+    Public Property HopProbability() As Double
+        Get
+            Return Me._hopProbability
+        End Get
+        Set(ByVal value As Double)
+            Me._hopProbability = value
+        End Set
+    End Property
+
+    'Weight 
+    Public Property Weight() As Double
+        Get
+            Return Me._weight
+        End Get
+        Set(ByVal value As Double)
+            Me._weight = value
+        End Set
+    End Property
+
+    'MaxPaymentResults 
+    Public Property MaxPaymentResults() As Int64
+        Get
+            Return Me._maxPaymentResults
+        End Get
+        Set(ByVal value As Int64)
+            Me._maxPaymentResults = value
+        End Set
+    End Property
+
+    'MinFailRelaxInterval
+    Public Property MinFailRelaxInterval() As String
+        Get
+            Return Me._minFailRelaxInterval
+        End Get
+        Set(ByVal value As String)
+            Me._minFailRelaxInterval = value
+        End Set
+    End Property
+
+
+End Class
+
