@@ -22,16 +22,16 @@ Partial Class Form1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim ListViewItem1 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem(New String() {"Alias :"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, New System.Drawing.Font("Yu Gothic UI", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point))
-        Dim ListViewItem2 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
-        Dim ListViewItem3 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Active channels :")
-        Dim ListViewItem4 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Inactive channels :")
-        Dim ListViewItem5 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Pending channels :")
-        Dim ListViewItem6 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
-        Dim ListViewItem7 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("On-chain balance :")
-        Dim ListViewItem8 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Lightning balance :")
-        Dim ListViewItem9 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
-        Dim ListViewItem10 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Network :")
+        Dim ListViewItem21 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem(New String() {"Alias :"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, New System.Drawing.Font("Yu Gothic UI", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point))
+        Dim ListViewItem22 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
+        Dim ListViewItem23 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Active channels :")
+        Dim ListViewItem24 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Inactive channels :")
+        Dim ListViewItem25 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Pending channels :")
+        Dim ListViewItem26 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
+        Dim ListViewItem27 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("On-chain balance :")
+        Dim ListViewItem28 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Lightning balance :")
+        Dim ListViewItem29 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
+        Dim ListViewItem30 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Network :")
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FileFToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.NodeConfigFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -69,6 +69,8 @@ Partial Class Form1
         Me.FeeControl = New System.Windows.Forms.ColumnHeader()
         Me.TabPage_rebalance = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
+        Me.Button_feeCont = New System.Windows.Forms.Button()
+        Me.Button_rebDirection = New System.Windows.Forms.Button()
         Me.Button_mcReset = New System.Windows.Forms.Button()
         Me.Button_setMC = New System.Windows.Forms.Button()
         Me.TextBox_mcMFR = New System.Windows.Forms.TextBox()
@@ -251,7 +253,7 @@ Partial Class Form1
         Me.ListView_main.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnTitle, Me.ColumnData})
         Me.ListView_main.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ListView_main.Font = New System.Drawing.Font("Yu Gothic UI", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.ListView_main.Items.AddRange(New System.Windows.Forms.ListViewItem() {ListViewItem1, ListViewItem2, ListViewItem3, ListViewItem4, ListViewItem5, ListViewItem6, ListViewItem7, ListViewItem8, ListViewItem9, ListViewItem10})
+        Me.ListView_main.Items.AddRange(New System.Windows.Forms.ListViewItem() {ListViewItem21, ListViewItem22, ListViewItem23, ListViewItem24, ListViewItem25, ListViewItem26, ListViewItem27, ListViewItem28, ListViewItem29, ListViewItem30})
         Me.ListView_main.Location = New System.Drawing.Point(3, 3)
         Me.ListView_main.Name = "ListView_main"
         Me.ListView_main.Size = New System.Drawing.Size(806, 500)
@@ -479,6 +481,8 @@ Partial Class Form1
         Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200.0!))
         Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50.0!))
         Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200.0!))
+        Me.TableLayoutPanel2.Controls.Add(Me.Button_feeCont, 3, 5)
+        Me.TableLayoutPanel2.Controls.Add(Me.Button_rebDirection, 3, 4)
         Me.TableLayoutPanel2.Controls.Add(Me.Button_mcReset, 3, 9)
         Me.TableLayoutPanel2.Controls.Add(Me.Button_setMC, 3, 8)
         Me.TableLayoutPanel2.Controls.Add(Me.TextBox_mcMFR, 1, 11)
@@ -527,6 +531,26 @@ Partial Class Form1
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
         Me.TableLayoutPanel2.Size = New System.Drawing.Size(806, 500)
         Me.TableLayoutPanel2.TabIndex = 0
+        '
+        'Button_feeCont
+        '
+        Me.Button_feeCont.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Button_feeCont.Location = New System.Drawing.Point(453, 203)
+        Me.Button_feeCont.Name = "Button_feeCont"
+        Me.Button_feeCont.Size = New System.Drawing.Size(350, 34)
+        Me.Button_feeCont.TabIndex = 31
+        Me.Button_feeCont.Text = "fee control reset"
+        Me.Button_feeCont.UseVisualStyleBackColor = True
+        '
+        'Button_rebDirection
+        '
+        Me.Button_rebDirection.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Button_rebDirection.Location = New System.Drawing.Point(453, 163)
+        Me.Button_rebDirection.Name = "Button_rebDirection"
+        Me.Button_rebDirection.Size = New System.Drawing.Size(350, 34)
+        Me.Button_rebDirection.TabIndex = 30
+        Me.Button_rebDirection.Text = "rebalace direction reset"
+        Me.Button_rebDirection.UseVisualStyleBackColor = True
         '
         'Button_mcReset
         '
@@ -1558,4 +1582,6 @@ Partial Class Form1
     Friend WithEvents SaveBaseFeeRateConfigFileToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SaveRebalanceNodeConfigFileToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SaveFileDialog1 As SaveFileDialog
+    Friend WithEvents Button_feeCont As Button
+    Friend WithEvents Button_rebDirection As Button
 End Class

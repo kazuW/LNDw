@@ -29,6 +29,7 @@ Public Class Form1
     Public Shared Ignore_ChannelsCollection As ArrayList = New ArrayList
 
     Public Shared tmpResult As String
+    Public Shared listViewUpdate_flag As Boolean = False
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -66,7 +67,7 @@ Public Class Form1
         TextBox_interval_reb.Text = "10"
         TextBox_repeat_reb.Text = "10"
         TextBox_repeatRoute.Text = "100"
-        TextBox_timeout_reb.Text = "3600" '1 hour
+        TextBox_timeout_reb.Text = "1200" '20 minutes
 
         TextBox_log.Text += dt + ": Start LNDw" + vbCrLf
 
@@ -347,14 +348,7 @@ Public Class Form1
 
     Private Sub Button_startRebalance_Click(sender As Object, e As EventArgs) Handles Button_startRebalance.Click
 
-        If CheckBox_autoRebalance.Checked = False Then
-
-            startRebalance()
-
-        Else
-
-        End If
-
+        startRebalance()
 
     End Sub
 
@@ -529,7 +523,7 @@ reStartRebalance_query:
                 End While
 
                 If Not tmpres = "SUCCEEDED" Then
-                    tmpResult = "*** Rebalancing(query) " + tmpChannel_outgoing.AliasName + " to " + tmpChannel_lashop.AliasName + " " + res + vbCrLf
+                    tmpResult = "*** Rebalancing(query) " + tmpChannel_outgoing.AliasName + " to " + tmpChannel_lashop.AliasName + "(fee=" + rebalance_fee_limit + ") " + res + vbCrLf
                 End If
 
                 tmpres = ""
@@ -551,8 +545,8 @@ reStartRebalance_query:
 
                 autoFeeChannelsCollection()
                 autoFeeUpdate(0)
-                updateAllChannels1()
 
+                listViewUpdate_flag = True
                 tmpResult = dt + ": Done auto fee setting!" + vbCrLf
                 bgWorker.ReportProgress(progressNum)
 
@@ -568,6 +562,11 @@ reStartRebalance_query:
     End Sub
     Private Sub BackgroundWorker2_ProgressChanged(sender As Object, e As ProgressChangedEventArgs) Handles BackgroundWorker2.ProgressChanged
 
+        If listViewUpdate_flag = True Then
+            updateAllChannels1()
+        End If
+
+        listViewUpdate_flag = False
         TextBox_log.Text += tmpResult
 
     End Sub
@@ -596,7 +595,7 @@ reStartRebalance_query:
 reStartRebalance:
         Dim i As Integer = 0
         Dim res As String = "FAILED"
-        Dim tmpres As String = ""
+        Dim tmpres As String = "FAILED"
         Dim progressNum As Integer = 0
 
         OutgoingChannelsCollection()
@@ -633,7 +632,7 @@ repPayInvoice:
                     GoTo repPayInvoice
                 End If
 
-                tmpResult = "*** Rebalancing " + tmpChannel_outgoing.AliasName + " to " + tmpChannel_lashop.AliasName + " " + tmpres + vbCrLf
+                tmpResult = "*** Rebalancing " + tmpChannel_outgoing.AliasName + " to " + tmpChannel_lashop.AliasName + "(fee=" + rebalance_fee_limit + ") " + tmpres + vbCrLf
                 bgWorker.ReportProgress(progressNum)
 
                 If bgWorker.CancellationPending = True Then
@@ -649,8 +648,8 @@ repPayInvoice:
 
                 autoFeeChannelsCollection()
                 autoFeeUpdate(0)
-                updateAllChannels1()
 
+                listViewUpdate_flag = True
                 tmpResult = dt + ": Done auto fee setting!" + vbCrLf
                 bgWorker.ReportProgress(progressNum)
 
@@ -667,6 +666,11 @@ repPayInvoice:
 
     Private Sub BackgroundWorker1_ProgressChanged(sender As Object, e As ProgressChangedEventArgs) Handles BackgroundWorker1.ProgressChanged
 
+        If listViewUpdate_flag = True Then
+            updateAllChannels1()
+        End If
+
+        listViewUpdate_flag = False
         TextBox_log.Text += tmpResult
 
     End Sub
@@ -1200,11 +1204,47 @@ end_checkLocalBalance:
             tmpChannel = AllChannels_cash(i)
 
             Fw.WriteLine(tmpChannel.PubKey + "," + tmpChannel.ChanID + "," + tmpChannel.AliasName _
-                         + "," + ListView_cannels.Items(i).SubItems(4).Text + "," + ListView_cannels.Items(i).SubItems(5).Text)
+                         + "," + ListView_cannels.Items(i).SubItems(4).Text + "," + ListView_cannels.Items(i).SubItems(5).Text.Replace(",", "-"))
 
         Next
 
         Fw.Close()
+
+    End Sub
+
+    Private Sub Button_feeCont_Click(sender As Object, e As EventArgs) Handles Button_feeCont.Click
+
+        For i = 0 To AllChannels_cash.Count - 1
+            Dim tmpChannel As channel = New channel
+            tmpChannel = AllChannels_cash(i)
+
+            tmpChannel.AutoFeeCont = 0
+            AllChannels_cash(i) = tmpChannel
+
+        Next
+
+        updateAllChannels()
+
+        TextBox_log.Text += dt + ": reset auto fee control all channels" + vbCrLf
+
+
+    End Sub
+
+    Private Sub Button_rebDirection_Click(sender As Object, e As EventArgs) Handles Button_rebDirection.Click
+
+        For i = 0 To AllChannels_cash.Count - 1
+            Dim tmpChannel As channel = New channel
+            tmpChannel = AllChannels_cash(i)
+
+            tmpChannel.ChanDirection = "none"
+            AllChannels_cash(i) = tmpChannel
+
+        Next
+
+        updateAllChannels()
+
+        TextBox_log.Text += dt + ": reset rebalance direction all channels" + vbCrLf
+
 
     End Sub
 
