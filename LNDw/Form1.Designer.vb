@@ -22,16 +22,17 @@ Partial Class Form1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim ListViewItem21 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem(New String() {"Alias :"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, New System.Drawing.Font("Yu Gothic UI", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point))
-        Dim ListViewItem22 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
-        Dim ListViewItem23 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Active channels :")
-        Dim ListViewItem24 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Inactive channels :")
-        Dim ListViewItem25 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Pending channels :")
-        Dim ListViewItem26 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
-        Dim ListViewItem27 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("On-chain balance :")
-        Dim ListViewItem28 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Lightning balance :")
-        Dim ListViewItem29 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
-        Dim ListViewItem30 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Network :")
+        Me.components = New System.ComponentModel.Container()
+        Dim ListViewItem1 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem(New String() {"Alias :"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, New System.Drawing.Font("Yu Gothic UI", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point))
+        Dim ListViewItem2 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
+        Dim ListViewItem3 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Active channels :")
+        Dim ListViewItem4 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Inactive channels :")
+        Dim ListViewItem5 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Pending channels :")
+        Dim ListViewItem6 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
+        Dim ListViewItem7 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("On-chain balance :")
+        Dim ListViewItem8 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Lightning balance :")
+        Dim ListViewItem9 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
+        Dim ListViewItem10 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Network :")
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FileFToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.NodeConfigFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -103,6 +104,8 @@ Partial Class Form1
         Me.Button_getMC = New System.Windows.Forms.Button()
         Me.TabPage_conf = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.TextBox_feeIntervals = New System.Windows.Forms.TextBox()
+        Me.TextBox33 = New System.Windows.Forms.TextBox()
         Me.TextBox20 = New System.Windows.Forms.TextBox()
         Me.TextBox16 = New System.Windows.Forms.TextBox()
         Me.TextBox19 = New System.Windows.Forms.TextBox()
@@ -149,7 +152,6 @@ Partial Class Form1
         Me.TextBox_basefee = New System.Windows.Forms.TextBox()
         Me.TextBox_timelock = New System.Windows.Forms.TextBox()
         Me.TabPage_log = New System.Windows.Forms.TabPage()
-        Me.Button_PayResultRead = New System.Windows.Forms.Button()
         Me.TextBox_log = New System.Windows.Forms.TextBox()
         Me.Label_version = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -159,6 +161,8 @@ Partial Class Form1
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.BackgroundWorker2 = New System.ComponentModel.BackgroundWorker()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.TextBox_message = New System.Windows.Forms.TextBox()
         Me.MenuStrip1.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPage_main.SuspendLayout()
@@ -253,7 +257,7 @@ Partial Class Form1
         Me.ListView_main.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnTitle, Me.ColumnData})
         Me.ListView_main.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ListView_main.Font = New System.Drawing.Font("Yu Gothic UI", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.ListView_main.Items.AddRange(New System.Windows.Forms.ListViewItem() {ListViewItem21, ListViewItem22, ListViewItem23, ListViewItem24, ListViewItem25, ListViewItem26, ListViewItem27, ListViewItem28, ListViewItem29, ListViewItem30})
+        Me.ListView_main.Items.AddRange(New System.Windows.Forms.ListViewItem() {ListViewItem1, ListViewItem2, ListViewItem3, ListViewItem4, ListViewItem5, ListViewItem6, ListViewItem7, ListViewItem8, ListViewItem9, ListViewItem10})
         Me.ListView_main.Location = New System.Drawing.Point(3, 3)
         Me.ListView_main.Name = "ListView_main"
         Me.ListView_main.Size = New System.Drawing.Size(806, 500)
@@ -873,9 +877,11 @@ Partial Class Form1
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10.0!))
-        Me.TableLayoutPanel1.Controls.Add(Me.TextBox20, 0, 9)
-        Me.TableLayoutPanel1.Controls.Add(Me.TextBox16, 0, 8)
-        Me.TableLayoutPanel1.Controls.Add(Me.TextBox19, 0, 7)
+        Me.TableLayoutPanel1.Controls.Add(Me.TextBox_feeIntervals, 1, 7)
+        Me.TableLayoutPanel1.Controls.Add(Me.TextBox33, 0, 7)
+        Me.TableLayoutPanel1.Controls.Add(Me.TextBox20, 0, 10)
+        Me.TableLayoutPanel1.Controls.Add(Me.TextBox16, 0, 9)
+        Me.TableLayoutPanel1.Controls.Add(Me.TextBox19, 0, 8)
         Me.TableLayoutPanel1.Controls.Add(Me.TextBox18, 0, 6)
         Me.TableLayoutPanel1.Controls.Add(Me.TextBox17, 0, 5)
         Me.TableLayoutPanel1.Controls.Add(Me.TextBox15, 0, 0)
@@ -915,13 +921,13 @@ Partial Class Form1
         Me.TableLayoutPanel1.Controls.Add(Me.TextBox_Fee2_7, 8, 6)
         Me.TableLayoutPanel1.Controls.Add(Me.TextBox_Fee2_8, 9, 6)
         Me.TableLayoutPanel1.Controls.Add(Me.TextBox_Fee2_9, 10, 6)
-        Me.TableLayoutPanel1.Controls.Add(Me.TextBox39, 1, 7)
-        Me.TableLayoutPanel1.Controls.Add(Me.TextBox_basefee, 1, 8)
-        Me.TableLayoutPanel1.Controls.Add(Me.TextBox_timelock, 1, 9)
+        Me.TableLayoutPanel1.Controls.Add(Me.TextBox39, 1, 8)
+        Me.TableLayoutPanel1.Controls.Add(Me.TextBox_basefee, 1, 9)
+        Me.TableLayoutPanel1.Controls.Add(Me.TextBox_timelock, 1, 10)
         Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
-        Me.TableLayoutPanel1.RowCount = 11
+        Me.TableLayoutPanel1.RowCount = 12
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
@@ -933,16 +939,33 @@ Partial Class Form1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(806, 500)
         Me.TableLayoutPanel1.TabIndex = 0
+        '
+        'TextBox_feeIntervals
+        '
+        Me.TableLayoutPanel1.SetColumnSpan(Me.TextBox_feeIntervals, 10)
+        Me.TextBox_feeIntervals.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TextBox_feeIntervals.Location = New System.Drawing.Point(203, 283)
+        Me.TextBox_feeIntervals.Name = "TextBox_feeIntervals"
+        Me.TextBox_feeIntervals.Size = New System.Drawing.Size(600, 31)
+        Me.TextBox_feeIntervals.TabIndex = 46
+        '
+        'TextBox33
+        '
+        Me.TextBox33.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TextBox33.Location = New System.Drawing.Point(3, 283)
+        Me.TextBox33.Name = "TextBox33"
+        Me.TextBox33.ReadOnly = True
+        Me.TextBox33.Size = New System.Drawing.Size(194, 31)
+        Me.TextBox33.TabIndex = 45
+        Me.TextBox33.Text = "Auto fee intervals (min) :"
         '
         'TextBox20
         '
         Me.TextBox20.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TextBox20.Location = New System.Drawing.Point(3, 363)
+        Me.TextBox20.Location = New System.Drawing.Point(3, 403)
         Me.TextBox20.Name = "TextBox20"
         Me.TextBox20.ReadOnly = True
         Me.TextBox20.Size = New System.Drawing.Size(194, 31)
@@ -952,7 +975,7 @@ Partial Class Form1
         'TextBox16
         '
         Me.TextBox16.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TextBox16.Location = New System.Drawing.Point(3, 323)
+        Me.TextBox16.Location = New System.Drawing.Point(3, 363)
         Me.TextBox16.Name = "TextBox16"
         Me.TextBox16.ReadOnly = True
         Me.TextBox16.Size = New System.Drawing.Size(194, 31)
@@ -962,7 +985,7 @@ Partial Class Form1
         'TextBox19
         '
         Me.TextBox19.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TextBox19.Location = New System.Drawing.Point(3, 283)
+        Me.TextBox19.Location = New System.Drawing.Point(3, 323)
         Me.TextBox19.Name = "TextBox19"
         Me.TextBox19.ReadOnly = True
         Me.TextBox19.Size = New System.Drawing.Size(194, 31)
@@ -1315,7 +1338,7 @@ Partial Class Form1
         '
         Me.TableLayoutPanel1.SetColumnSpan(Me.TextBox39, 10)
         Me.TextBox39.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TextBox39.Location = New System.Drawing.Point(203, 283)
+        Me.TextBox39.Location = New System.Drawing.Point(203, 323)
         Me.TextBox39.Name = "TextBox39"
         Me.TextBox39.ReadOnly = True
         Me.TextBox39.Size = New System.Drawing.Size(600, 31)
@@ -1329,7 +1352,7 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TableLayoutPanel1.SetColumnSpan(Me.TextBox_basefee, 10)
-        Me.TextBox_basefee.Location = New System.Drawing.Point(203, 323)
+        Me.TextBox_basefee.Location = New System.Drawing.Point(203, 363)
         Me.TextBox_basefee.Name = "TextBox_basefee"
         Me.TextBox_basefee.Size = New System.Drawing.Size(600, 31)
         Me.TextBox_basefee.TabIndex = 43
@@ -1338,14 +1361,13 @@ Partial Class Form1
         '
         Me.TableLayoutPanel1.SetColumnSpan(Me.TextBox_timelock, 10)
         Me.TextBox_timelock.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TextBox_timelock.Location = New System.Drawing.Point(203, 363)
+        Me.TextBox_timelock.Location = New System.Drawing.Point(203, 403)
         Me.TextBox_timelock.Name = "TextBox_timelock"
         Me.TextBox_timelock.Size = New System.Drawing.Size(600, 31)
         Me.TextBox_timelock.TabIndex = 44
         '
         'TabPage_log
         '
-        Me.TabPage_log.Controls.Add(Me.Button_PayResultRead)
         Me.TabPage_log.Controls.Add(Me.TextBox_log)
         Me.TabPage_log.Location = New System.Drawing.Point(4, 34)
         Me.TabPage_log.Name = "TabPage_log"
@@ -1355,15 +1377,6 @@ Partial Class Form1
         Me.TabPage_log.Text = "Log"
         Me.TabPage_log.UseVisualStyleBackColor = True
         '
-        'Button_PayResultRead
-        '
-        Me.Button_PayResultRead.Location = New System.Drawing.Point(596, 466)
-        Me.Button_PayResultRead.Name = "Button_PayResultRead"
-        Me.Button_PayResultRead.Size = New System.Drawing.Size(210, 34)
-        Me.Button_PayResultRead.TabIndex = 1
-        Me.Button_PayResultRead.Text = "payment result read"
-        Me.Button_PayResultRead.UseVisualStyleBackColor = True
-        '
         'TextBox_log
         '
         Me.TextBox_log.Dock = System.Windows.Forms.DockStyle.Top
@@ -1371,7 +1384,7 @@ Partial Class Form1
         Me.TextBox_log.Multiline = True
         Me.TextBox_log.Name = "TextBox_log"
         Me.TextBox_log.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.TextBox_log.Size = New System.Drawing.Size(806, 412)
+        Me.TextBox_log.Size = New System.Drawing.Size(806, 454)
         Me.TextBox_log.TabIndex = 0
         '
         'Label_version
@@ -1424,11 +1437,23 @@ Partial Class Form1
         'BackgroundWorker2
         '
         '
+        'Timer1
+        '
+        '
+        'TextBox_message
+        '
+        Me.TextBox_message.Location = New System.Drawing.Point(12, 671)
+        Me.TextBox_message.Name = "TextBox_message"
+        Me.TextBox_message.ReadOnly = True
+        Me.TextBox_message.Size = New System.Drawing.Size(800, 31)
+        Me.TextBox_message.TabIndex = 5
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(10.0!, 25.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(820, 674)
+        Me.ClientSize = New System.Drawing.Size(820, 714)
+        Me.Controls.Add(Me.TextBox_message)
         Me.Controls.Add(Me.Button_updateChannel)
         Me.Controls.Add(Me.TextBox_pubkey)
         Me.Controls.Add(Me.Label1)
@@ -1584,4 +1609,8 @@ Partial Class Form1
     Friend WithEvents SaveFileDialog1 As SaveFileDialog
     Friend WithEvents Button_feeCont As Button
     Friend WithEvents Button_rebDirection As Button
+    Friend WithEvents TextBox_feeIntervals As TextBox
+    Friend WithEvents TextBox33 As TextBox
+    Friend WithEvents Timer1 As Timer
+    Friend WithEvents TextBox_message As TextBox
 End Class

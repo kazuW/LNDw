@@ -24,12 +24,14 @@ Public Class Form1
     Private lnd_restApi As New lnd_restApi
 
     Public Shared AutoFeeSet_ChannelsCollection As ArrayList = New ArrayList
+    Public Shared Another_ChannelsCollection As ArrayList = New ArrayList
     Public Shared Outgoing_ChannelsCollection As ArrayList = New ArrayList
     Public Shared Lasthop_ChannelsCollection As ArrayList = New ArrayList
     Public Shared Ignore_ChannelsCollection As ArrayList = New ArrayList
 
     Public Shared tmpResult As String
     Public Shared listViewUpdate_flag As Boolean = False
+    Public Shared duringCollection As Boolean = False
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -59,6 +61,8 @@ Public Class Form1
             Me.TableLayoutPanel1.Controls("TextBox_Fee1_" + i.ToString).Text = "1"
             Me.TableLayoutPanel1.Controls("TextBox_Fee2_" + i.ToString).Text = "1"
         Next
+
+        TextBox_feeIntervals.Text = "30"
 
         TextBox_basefee.Text = "1000"
         TextBox_timelock.Text = "40"
@@ -116,6 +120,7 @@ Public Class Form1
             Exit Sub
         End If
 
+        Dim message As String = "channels update in progress...."
 
         UpdateNodeInfo()
         AllChannels = lnd_restApi.getAllCannels()
@@ -145,13 +150,16 @@ Public Class Form1
 
             AllChannels(i) = tmpChannel
 
+            Dim progress As Integer = (i + 1) / AllChannels.Count * 100
+            TextBox_message.Text = message + "(" + progress.ToString(0) + "%)"
+
         Next
 
         AllChannels.Sort()
         AllChannels_cash = AllChannels
 
         TextBox_log.Text += dt + ": Initial all channels updeate!" + vbCrLf
-
+        TextBox_message.Text = "channels update done."
         updateAllChannels()
 
     End Sub
@@ -162,7 +170,7 @@ Public Class Form1
 
         For i = 0 To AllChannels_cash.Count - 1
             Dim tmpChannel As channel = New channel
-            tmpChannel = AllChannels(i)
+            tmpChannel = AllChannels_cash(i)
 
             Dim item_channel() As String = {tmpChannel.AliasName, tmpChannel.LocalCapRate.ToString(0) _
                 , tmpChannel.LocalFeeRate, tmpChannel.RemoteFeeRate, tmpChannel.ChanDirection _
@@ -172,7 +180,7 @@ Public Class Form1
             ListView_cannels.Items.Add(New ListViewItem(item_channel))
         Next
 
-        TextBox_log.Text += dt + ": Done all channels updeate!" + vbCrLf
+        TextBox_log.Text += dt + ": Done all channels update!" + vbCrLf
 
 
     End Sub
@@ -183,7 +191,7 @@ Public Class Form1
 
         For i = 0 To AllChannels_cash.Count - 1
             Dim tmpChannel As channel = New channel
-            tmpChannel = AllChannels(i)
+            tmpChannel = AllChannels_cash(i)
 
             Dim item_channel() As String = {tmpChannel.AliasName, tmpChannel.LocalCapRate.ToString(0) _
                 , tmpChannel.LocalFeeRate, tmpChannel.RemoteFeeRate, tmpChannel.ChanDirection _
@@ -348,6 +356,7 @@ Public Class Form1
 
     Private Sub Button_startRebalance_Click(sender As Object, e As EventArgs) Handles Button_startRebalance.Click
 
+        TextBox_message.Text = "rebalance start!"
         startRebalance()
 
     End Sub
@@ -541,16 +550,16 @@ reStartRebalance_query:
 
             Next
 
-            If CheckBox_autoFeeCont.Checked Then
+            'If CheckBox_autoFeeCont.Checked Then
 
-                autoFeeChannelsCollection()
-                autoFeeUpdate(0)
+            '    autoFeeChannelsCollection()
+            '    autoFeeUpdate(0)
 
-                listViewUpdate_flag = True
-                tmpResult = dt + ": Done auto fee setting!" + vbCrLf
-                bgWorker.ReportProgress(progressNum)
+            '    listViewUpdate_flag = True
+            '    tmpResult = dt + ": Done auto fee setting!" + vbCrLf
+            '    bgWorker.ReportProgress(progressNum)
 
-            End If
+            'End If
 
         Next
 
@@ -568,6 +577,7 @@ reStartRebalance_query:
 
         listViewUpdate_flag = False
         TextBox_log.Text += tmpResult
+        TextBox_message.Text = tmpResult
 
     End Sub
 
@@ -575,9 +585,11 @@ reStartRebalance_query:
 
         If e.Cancelled = True Then
             activeButton()
-            TextBox_log.Text += dt + ": Rebalance(query) done." + vbCrLf
+            TextBox_log.Text += dt + ": Rebalance(query) was canceled." + vbCrLf
+            TextBox_message.Text = "Rebalance(query) was canceled."
         Else
-            TextBox_log.Text += dt + ": Rebalance(query) done error." + vbCrLf
+            TextBox_log.Text += dt + ": Rebalance(query) done." + vbCrLf
+            TextBox_message.Text = "Rebalance(query) done."
             activeButton()
         End If
 
@@ -644,16 +656,16 @@ repPayInvoice:
 
             Next
 
-            If CheckBox_autoFeeCont.Checked Then
+            'If CheckBox_autoFeeCont.Checked Then
 
-                autoFeeChannelsCollection()
-                autoFeeUpdate(0)
+            '    autoFeeChannelsCollection()
+            '    autoFeeUpdate(0)
 
-                listViewUpdate_flag = True
-                tmpResult = dt + ": Done auto fee setting!" + vbCrLf
-                bgWorker.ReportProgress(progressNum)
+            '    listViewUpdate_flag = True
+            '    tmpResult = dt + ": Done auto fee setting!" + vbCrLf
+            '    bgWorker.ReportProgress(progressNum)
 
-            End If
+            'End If
 
         Next
 
@@ -672,6 +684,7 @@ repPayInvoice:
 
         listViewUpdate_flag = False
         TextBox_log.Text += tmpResult
+        TextBox_message.Text = tmpResult
 
     End Sub
 
@@ -679,9 +692,11 @@ repPayInvoice:
 
         If e.Cancelled = True Then
             activeButton()
-            TextBox_log.Text += dt + ": Rebalance canceled." + vbCrLf
+            TextBox_log.Text += dt + ": Rebalance was canceled." + vbCrLf
+            TextBox_message.Text = "Rebalance was canceled."
         Else
-            TextBox_log.Text += dt + ": Rebalance canceled error." + vbCrLf
+            TextBox_log.Text += dt + ": Rebalance done." + vbCrLf
+            TextBox_message.Text = "Rebalance done."
             activeButton()
         End If
 
@@ -690,7 +705,7 @@ repPayInvoice:
 
         Button_updateChannel.Enabled = False
         Button_changePara.Enabled = False
-        Button_autoFeeUpdate.Enabled = False
+        'Button_autoFeeUpdate.Enabled = False
         Button_startRebalance.Enabled = False
         TextBox_amount_reb.ReadOnly = True
         TextBox_feelimit_reb.ReadOnly = True
@@ -714,7 +729,7 @@ repPayInvoice:
 
         Button_updateChannel.Enabled = True
         Button_changePara.Enabled = True
-        Button_autoFeeUpdate.Enabled = True
+        'Button_autoFeeUpdate.Enabled = True
         Button_startRebalance.Enabled = True
         TextBox_amount_reb.ReadOnly = False
         TextBox_feelimit_reb.ReadOnly = False
@@ -802,7 +817,9 @@ repPayInvoice:
 
         For Each resString As String In response
 
-            Fw.WriteLine(resString)
+            If Not resString = "" Then
+                Fw.WriteLine(resString)
+            End If
 
             Try
                 Dim JsonObject As Object = JsonConvert.DeserializeObject(resString)
@@ -826,24 +843,60 @@ repPayInvoice:
 
     Private Sub Button_autoFeeUpdate_Click(sender As Object, e As EventArgs) Handles Button_autoFeeUpdate.Click
 
-        Dim resDialog As DialogResult = MessageBox.Show("Just a minutes...", "Set channels fee", MessageBoxButtons.OKCancel)
+        If Not CheckBox_autoFeeCont.Checked Then
 
-        If resDialog = DialogResult.Cancel Then
-            Exit Sub
+            If Button_startRebalance.Enabled = False Then
+                Dim resDialog1 As DialogResult = MessageBox.Show("During rebalancing...", "Can't fee setting", MessageBoxButtons.OK)
+                Exit Sub
+            End If
+
+            Dim resDialog As DialogResult = MessageBox.Show("Just a minutes...", "Set channels fee", MessageBoxButtons.OKCancel)
+
+            If resDialog = DialogResult.Cancel Then
+                Exit Sub
+            End If
+
+            TextBox_message.Text = "fee update on progress..."
+
+            autoFeeChannelsCollection()
+            autoFeeUpdate(1)
+
+            TextBox_log.Text += dt + ": Done auto fee setting!" + vbCrLf
+            TextBox_message.Text = "fee update done!!"
+
+            updateAllChannels()
+
+        Else
+
+            If Button_autoFeeUpdate.Text = "Cancel Fee update" Then
+
+                Button_autoFeeUpdate.Text = "Auto Fee update"
+                Timer1.Enabled = False
+                TextBox_log.Text += dt + ": Stop auto fee update!!" + vbCrLf
+                TextBox_message.Text = "Auto fee update was canceled."
+                Exit Sub
+
+            Else
+
+                Dim tspan As Integer = CType(TextBox_feeIntervals.Text, Integer) * 60 'seconds
+                Timer1.Interval = tspan * 1000
+                Timer1.Enabled = True
+                TextBox_log.Text += dt + ": Start auto fee update!!" + vbCrLf
+                TextBox_message.Text = "Auto fee update start."
+                Button_autoFeeUpdate.Text = "Cancel Fee update"
+
+            End If
+
         End If
 
-        autoFeeChannelsCollection()
-        autoFeeUpdate(1)
 
-        TextBox_log.Text += dt + ": Done auto fee setting!" + vbCrLf
-
-        updateAllChannels()
 
     End Sub
 
     Private Sub autoFeeChannelsCollection()
 
         AutoFeeSet_ChannelsCollection.Clear()
+        Another_ChannelsCollection.Clear()
 
         For i = 0 To AllChannels_cash.Count - 1
 
@@ -852,12 +905,14 @@ repPayInvoice:
 
             If tmpChannel.AutoFeeCont > 0 Then
                 AutoFeeSet_ChannelsCollection.Add(tmpChannel)
+            Else
+                Another_ChannelsCollection.Add(tmpChannel)
             End If
         Next
 
     End Sub
 
-    Private Sub autoFeeUpdate(ByVal buttonClick As Boolean)
+    Private Sub autoFeeUpdate(ByVal feeCont_Force As Boolean)
 
         Dim fee As Single
         Dim HTLC_max As Single
@@ -871,23 +926,21 @@ repPayInvoice:
             FeeSetting2(i) = CType(Me.TableLayoutPanel1.Controls("TextBox_Fee2_" + i.ToString).Text, Single)
         Next
 
-        If buttonClick = False Then
-            checkAllChannels.Clear()
-            checkAllChannels = lnd_restApi.getAllCannels() 'temporary update channel info
-        End If
+        checkAllChannels.Clear()
+        checkAllChannels = lnd_restApi.getAllCannels() 'temporary update channel info
 
         For i = 0 To AutoFeeSet_ChannelsCollection.Count - 1
 
-            Dim tmpChannel As channel = New channel
-            tmpChannel = AutoFeeSet_ChannelsCollection(i)
-
-            If buttonClick = False Then
+            If Not feeCont_Force Then
                 check_localBalance = checkLocalBalance(i)
 
                 If check_localBalance = False Then
                     Continue For
                 End If
             End If
+
+            Dim tmpChannel As channel = New channel
+            tmpChannel = AutoFeeSet_ChannelsCollection(i)
 
             If tmpChannel.AutoFeeCont = 1 Then
                 feeSetting = FeeSetting1
@@ -932,12 +985,21 @@ repPayInvoice:
 
             Dim setFeeRate As String = fee.ToString("0")
             Dim setHTLCs As String = HTLC_max.ToString(0) + "000"
-
-            Dim res As String = lnd_restApi.postChannelPolicy(tmpChannel.ChanPointID, BaseFee, setFeeRate, setHTLCs, TimeLock)
+            Dim oldFee As String = tmpChannel.LocalFeeRate
+            Dim oldCapRate As String = tmpChannel.LocalCapRate.ToString
 
             tmpChannel.LocalFeeRate = setFeeRate
             tmpChannel.LocalCapRate = CType(tmpChannel.LocalBalance, Single) / CType(tmpChannel.Capacity, Single) * 100
 
+            If Not setFeeRate = oldFee Then
+                Dim res As String = lnd_restApi.postChannelPolicy(tmpChannel.ChanPointID, BaseFee, setFeeRate, setHTLCs, TimeLock)
+                TextBox_log.Text += "*** Update fee " + tmpChannel.AliasName + " :(" + oldCapRate + ")(Old fee=" + oldFee + ") --> (" + tmpChannel.LocalCapRate.ToString + ")(New fee=" + setFeeRate + ")" + vbCrLf
+                TextBox_message.Text = "*** Update fee " + tmpChannel.AliasName + " :(" + oldCapRate + ")(Old fee=" + oldFee + ") --> (" + tmpChannel.LocalCapRate.ToString + ")(New fee=" + setFeeRate + ")"
+                'Else
+                'TextBox_log.Text += "*** No update " + tmpChannel.AliasName + " :(" + oldCapRate + ")(Old fee=" + oldFee + ") --> (" + tmpChannel.LocalCapRate.ToString + ")(New fee=" + setFeeRate + ")" + vbCrLf
+            End If
+
+            AutoFeeSet_ChannelsCollection(i) = tmpChannel
         Next
 
         For i = 0 To AutoFeeSet_ChannelsCollection.Count - 1
@@ -955,6 +1017,29 @@ repPayInvoice:
             Next
         Next
 
+        For i = 0 To Another_ChannelsCollection.Count - 1
+            Dim tmpChannel As channel = New channel
+            tmpChannel = Another_ChannelsCollection(i)
+
+            For j = 0 To AllChannels_cash.Count - 1
+                Dim tmpChannel1 As channel = New channel
+                tmpChannel1 = AllChannels_cash(j)
+
+                If tmpChannel1.ChanID = tmpChannel.ChanID Then
+                    If (Not tmpChannel.LocalBalance = tmpChannel1.LocalBalance) And tmpChannel.Active Then
+
+                        tmpChannel1.LocalBalance = tmpChannel.LocalBalance
+                        tmpChannel1.RemoteBalance = tmpChannel.RemoteBalance
+                        tmpChannel1.LocalCapRate = CType(tmpChannel.LocalBalance, Single) / CType(tmpChannel.Capacity, Single) * 100
+                        AllChannels_cash(j) = tmpChannel1
+                        Exit For
+                    End If
+                End If
+
+            Next
+        Next
+
+
     End Sub
 
     Private Function checkLocalBalance(ByVal i As Integer) As Boolean
@@ -969,11 +1054,11 @@ repPayInvoice:
             tmpChannel = checkAllChannels(j)
 
             If tmpChannel.ChanID = chkChannel.ChanID Then
-                If (Not tmpChannel.LocalBalance = chkChannel.LocalBalance) And chkChannel.Active Then
+                If (Not tmpChannel.LocalBalance = chkChannel.LocalBalance) And tmpChannel.Active Then
 
-                    tmpChannel.LocalBalance = chkChannel.LocalBalance
-                    tmpChannel.RemoteBalance = chkChannel.RemoteBalance
-                    AutoFeeSet_ChannelsCollection(i) = tmpChannel
+                    chkChannel.LocalBalance = tmpChannel.LocalBalance
+                    chkChannel.RemoteBalance = tmpChannel.RemoteBalance
+                    AutoFeeSet_ChannelsCollection(i) = chkChannel
                     res = True
                     GoTo end_checkLocalBalance
                 Else
@@ -985,9 +1070,9 @@ repPayInvoice:
 
         Next
 
-end_checkLocalBalance:
-
         res = False
+
+end_checkLocalBalance:
 
         Return res
 
@@ -1045,42 +1130,43 @@ end_checkLocalBalance:
 
     End Sub
 
-    Private Sub Button_PayResultRead_Click(sender As Object, e As EventArgs) Handles Button_PayResultRead.Click
+    'Private Sub Button_PayResultRead_Click(sender As Object, e As EventArgs)
 
-        Dim Ret As DialogResult
-        Dim FileName As String
-        Dim Fs As IO.StreamReader
-        Dim tmpData As String
-        'Dim strData() As String
+    '    Dim Ret As DialogResult
+    '    Dim FileName As String
+    '    Dim Fs As IO.StreamReader
+    '    Dim tmpData As String
+    '    'Dim strData() As String
 
-        Ret = OpenFileDialog1.ShowDialog()
+    '    Ret = OpenFileDialog1.ShowDialog()
 
-        If Ret = DialogResult.Cancel Then
-            Exit Sub
-        End If
+    '    If Ret = DialogResult.Cancel Then
+    '        Exit Sub
+    '    End If
 
-        FileName = IO.Path.GetFullPath(OpenFileDialog1.FileName)
+    '    FileName = IO.Path.GetFullPath(OpenFileDialog1.FileName)
 
-        Fs = New IO.StreamReader(FileName, System.Text.Encoding.Default)
-        tmpData = Fs.ReadLine
+    '    Fs = New IO.StreamReader(FileName, System.Text.Encoding.Default)
+    '    tmpData = Fs.ReadLine
 
-        Do While tmpData <> Nothing
+    '    Do While tmpData <> Nothing
 
-            Dim JsonObject As Object = JsonConvert.DeserializeObject(tmpData)
-            'Dim JsonObject_res As Object = JsonObject("")
+    '        Dim JsonObject As Object = JsonConvert.DeserializeObject(tmpData)
+    '        'Dim JsonObject_res As Object = JsonObject("")
 
-            tmpData = Fs.ReadLine
+    '        tmpData = Fs.ReadLine
 
-        Loop
+    '    Loop
 
 
 
-    End Sub
+    'End Sub
 
     Private Sub Button_cancel_Click(sender As Object, e As EventArgs) Handles Button_cancel.Click
 
         BackgroundWorker1.CancelAsync()
         BackgroundWorker2.CancelAsync()
+        TextBox_message.Text = "rebalance cancel in progress..."
 
     End Sub
 
@@ -1245,6 +1331,17 @@ end_checkLocalBalance:
 
         TextBox_log.Text += dt + ": reset rebalance direction all channels" + vbCrLf
 
+
+    End Sub
+
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+
+        autoFeeChannelsCollection()
+        autoFeeUpdate(0)
+
+        'TextBox_log.Text += dt + ": Auto fee setting(timer) done!!" + vbCrLf
+
+        updateAllChannels1()
 
     End Sub
 
