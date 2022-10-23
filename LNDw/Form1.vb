@@ -810,16 +810,17 @@ repPayInvoice:
         Dim Fw As IO.StreamWriter
         Dim FileName As String = "LNDw_result"
         Dim res As String = ""
+        Dim resAll As String = ""
 
-        Fw = New IO.StreamWriter((".\" + FileName + DateTime.Now.ToString("yyyyMMddHHmm") + ".txt"), False, Encoding.Default)
+        '        Fw = New IO.StreamWriter((".\" + FileName + DateTime.Now.ToString("yyyyMMddHHmm") + ".txt"), False, Encoding.Default)
 
         response = lnd_restApi.sendPayment(outgoing, lasthop, feelimit, payreq)
 
         For Each resString As String In response
 
-            If Not resString = "" Then
-                Fw.WriteLine(resString)
-            End If
+            'If Not resString = "" Then
+            '    Fw.WriteLine(resString)
+            'End If
 
             Try
                 Dim JsonObject As Object = JsonConvert.DeserializeObject(resString)
@@ -835,7 +836,11 @@ repPayInvoice:
 
         Next
 
-        Fw.Close()
+        If Not resAll = "" Then
+            Fw = New IO.StreamWriter((".\" + FileName + DateTime.Now.ToString("yyyyMMddHHmm") + ".txt"), False, Encoding.Default)
+            Fw.WriteLine(resAll)
+            Fw.Close()
+        End If
 
         Return res
 
@@ -1342,6 +1347,12 @@ end_checkLocalBalance:
         'TextBox_log.Text += dt + ": Auto fee setting(timer) done!!" + vbCrLf
 
         updateAllChannels1()
+
+    End Sub
+
+    Private Sub Button_logClear_Click(sender As Object, e As EventArgs) Handles Button_logClear.Click
+
+        TextBox_log.Text = ""
 
     End Sub
 

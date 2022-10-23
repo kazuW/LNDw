@@ -23,16 +23,16 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim ListViewItem1 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem(New String() {"Alias :"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, New System.Drawing.Font("Yu Gothic UI", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point))
-        Dim ListViewItem2 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
-        Dim ListViewItem3 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Active channels :")
-        Dim ListViewItem4 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Inactive channels :")
-        Dim ListViewItem5 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Pending channels :")
-        Dim ListViewItem6 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
-        Dim ListViewItem7 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("On-chain balance :")
-        Dim ListViewItem8 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Lightning balance :")
-        Dim ListViewItem9 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
-        Dim ListViewItem10 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Network :")
+        Dim ListViewItem11 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem(New String() {"Alias :"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, New System.Drawing.Font("Yu Gothic UI", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point))
+        Dim ListViewItem12 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
+        Dim ListViewItem13 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Active channels :")
+        Dim ListViewItem14 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Inactive channels :")
+        Dim ListViewItem15 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Pending channels :")
+        Dim ListViewItem16 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
+        Dim ListViewItem17 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("On-chain balance :")
+        Dim ListViewItem18 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Lightning balance :")
+        Dim ListViewItem19 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
+        Dim ListViewItem20 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Network :")
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FileFToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.NodeConfigFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -152,6 +152,7 @@ Partial Class Form1
         Me.TextBox_basefee = New System.Windows.Forms.TextBox()
         Me.TextBox_timelock = New System.Windows.Forms.TextBox()
         Me.TabPage_log = New System.Windows.Forms.TabPage()
+        Me.Button_logClear = New System.Windows.Forms.Button()
         Me.TextBox_log = New System.Windows.Forms.TextBox()
         Me.Label_version = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -257,7 +258,7 @@ Partial Class Form1
         Me.ListView_main.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnTitle, Me.ColumnData})
         Me.ListView_main.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ListView_main.Font = New System.Drawing.Font("Yu Gothic UI", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.ListView_main.Items.AddRange(New System.Windows.Forms.ListViewItem() {ListViewItem1, ListViewItem2, ListViewItem3, ListViewItem4, ListViewItem5, ListViewItem6, ListViewItem7, ListViewItem8, ListViewItem9, ListViewItem10})
+        Me.ListView_main.Items.AddRange(New System.Windows.Forms.ListViewItem() {ListViewItem11, ListViewItem12, ListViewItem13, ListViewItem14, ListViewItem15, ListViewItem16, ListViewItem17, ListViewItem18, ListViewItem19, ListViewItem20})
         Me.ListView_main.Location = New System.Drawing.Point(3, 3)
         Me.ListView_main.Name = "ListView_main"
         Me.ListView_main.Size = New System.Drawing.Size(806, 500)
@@ -1368,6 +1369,7 @@ Partial Class Form1
         '
         'TabPage_log
         '
+        Me.TabPage_log.Controls.Add(Me.Button_logClear)
         Me.TabPage_log.Controls.Add(Me.TextBox_log)
         Me.TabPage_log.Location = New System.Drawing.Point(4, 34)
         Me.TabPage_log.Name = "TabPage_log"
@@ -1376,6 +1378,16 @@ Partial Class Form1
         Me.TabPage_log.TabIndex = 0
         Me.TabPage_log.Text = "Log"
         Me.TabPage_log.UseVisualStyleBackColor = True
+        '
+        'Button_logClear
+        '
+        Me.Button_logClear.Font = New System.Drawing.Font("Yu Gothic UI", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.Button_logClear.Location = New System.Drawing.Point(589, 466)
+        Me.Button_logClear.Name = "Button_logClear"
+        Me.Button_logClear.Size = New System.Drawing.Size(215, 34)
+        Me.Button_logClear.TabIndex = 1
+        Me.Button_logClear.Text = "Log clear"
+        Me.Button_logClear.UseVisualStyleBackColor = True
         '
         'TextBox_log
         '
@@ -1613,4 +1625,5 @@ Partial Class Form1
     Friend WithEvents TextBox33 As TextBox
     Friend WithEvents Timer1 As Timer
     Friend WithEvents TextBox_message As TextBox
+    Friend WithEvents Button_logClear As Button
 End Class
