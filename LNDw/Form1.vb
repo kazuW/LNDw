@@ -20,11 +20,11 @@ Public Class Form1
 
     Public Shared AllChannels As ArrayList = New ArrayList
     Public Shared AllChannels_cash As ArrayList = New ArrayList
-    Public Shared checkAllChannels As ArrayList = New ArrayList
+    'Public Shared checkAllChannels As ArrayList = New ArrayList
     Private lnd_restApi As New lnd_restApi
 
     Public Shared AutoFeeSet_ChannelsCollection As ArrayList = New ArrayList
-    Public Shared Another_ChannelsCollection As ArrayList = New ArrayList
+    'Public Shared Another_ChannelsCollection As ArrayList = New ArrayList
     Public Shared Outgoing_ChannelsCollection As ArrayList = New ArrayList
     Public Shared Lasthop_ChannelsCollection As ArrayList = New ArrayList
     Public Shared Ignore_ChannelsCollection As ArrayList = New ArrayList
@@ -32,6 +32,7 @@ Public Class Form1
     Public Shared tmpResult As String
     Public Shared listViewUpdate_flag As Boolean = False
     Public Shared duringCollection As Boolean = False
+    Public Shared duringChannelUpdate As Boolean = False
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -435,7 +436,7 @@ reStartRebalance_query:
         Dim res As String = "FAILED"
         Dim tmpres As String = ""
         Dim route As String
-        Dim route_v2 As String
+        'Dim route_v2 As String
         Dim route1 As Object
         Dim progressNum As Integer = 0
 
@@ -563,6 +564,37 @@ reStartRebalance_query:
 
         Next
 
+        'local balance update
+        duringChannelUpdate = True
+        Dim checkAllChannels As ArrayList = New ArrayList
+        checkAllChannels = lnd_restApi.getAllCannels() 'temporary update channel info
+
+        For j = 0 To checkAllChannels.Count - 1
+            For k = 0 To AllChannels_cash.Count - 1
+
+                Dim chkChannel As channel = New channel
+                Dim tmpChannel As channel = New channel
+                chkChannel = checkAllChannels(j)
+                tmpChannel = AllChannels_cash(k)
+
+                If tmpChannel.ChanID = chkChannel.ChanID Then
+                    If (Not tmpChannel.LocalBalance = chkChannel.LocalBalance) And chkChannel.Active Then
+
+                        tmpChannel.LocalBalance = chkChannel.LocalBalance
+                        tmpChannel.RemoteBalance = chkChannel.RemoteBalance
+                        tmpChannel.LocalCapRate = CType(tmpChannel.LocalBalance, Single) / CType(tmpChannel.Capacity, Single) * 100
+
+                        AllChannels_cash(k) = tmpChannel
+                        Exit For
+                    End If
+                End If
+
+            Next
+        Next
+
+        duringChannelUpdate = False
+        listViewUpdate_flag = True
+
         If CheckBox_autoRebalance.Checked Then
             GoTo reStartRebalance_query
         End If
@@ -582,6 +614,8 @@ reStartRebalance_query:
     End Sub
 
     Private Sub BackgroundWorker2_Completed(sender As Object, e As RunWorkerCompletedEventArgs) Handles BackgroundWorker2.RunWorkerCompleted
+
+        updateAllChannels1()
 
         If e.Cancelled = True Then
             activeButton()
@@ -669,6 +703,37 @@ repPayInvoice:
 
         Next
 
+        'local balance update
+        duringChannelUpdate = True
+        Dim checkAllChannels As ArrayList = New ArrayList
+        checkAllChannels = lnd_restApi.getAllCannels() 'temporary update channel info
+
+        For j = 0 To checkAllChannels.Count - 1
+            For k = 0 To AllChannels_cash.Count - 1
+
+                Dim chkChannel As channel = New channel
+                Dim tmpChannel As channel = New channel
+                chkChannel = checkAllChannels(j)
+                tmpChannel = AllChannels_cash(k)
+
+                If tmpChannel.ChanID = chkChannel.ChanID Then
+                    If (Not tmpChannel.LocalBalance = chkChannel.LocalBalance) And chkChannel.Active Then
+
+                        tmpChannel.LocalBalance = chkChannel.LocalBalance
+                        tmpChannel.RemoteBalance = chkChannel.RemoteBalance
+                        tmpChannel.LocalCapRate = CType(tmpChannel.LocalBalance, Single) / CType(tmpChannel.Capacity, Single) * 100
+
+                        AllChannels_cash(k) = tmpChannel
+                        Exit For
+                    End If
+                End If
+
+            Next
+        Next
+
+        duringChannelUpdate = False
+        listViewUpdate_flag = True
+
         If CheckBox_autoRebalance.Checked Then
             GoTo reStartRebalance
         End If
@@ -689,6 +754,8 @@ repPayInvoice:
     End Sub
 
     Private Sub BackgroundWorker1_Completed(sender As Object, e As RunWorkerCompletedEventArgs) Handles BackgroundWorker1.RunWorkerCompleted
+
+        updateAllChannels1()
 
         If e.Cancelled = True Then
             activeButton()
@@ -900,8 +967,34 @@ repPayInvoice:
 
     Private Sub autoFeeChannelsCollection()
 
+        'local balance update
+        Dim checkAllChannels As ArrayList = New ArrayList
+        checkAllChannels = lnd_restApi.getAllCannels() 'temporary update channel info
+
+        For j = 0 To checkAllChannels.Count - 1
+            For k = 0 To AllChannels_cash.Count - 1
+
+                Dim chkChannel As channel = New channel
+                Dim tmpChannel As channel = New channel
+                chkChannel = checkAllChannels(j)
+                tmpChannel = AllChannels_cash(k)
+
+                If tmpChannel.ChanID = chkChannel.ChanID Then
+                    If (Not tmpChannel.LocalBalance = chkChannel.LocalBalance) And chkChannel.Active Then
+
+                        tmpChannel.LocalBalance = chkChannel.LocalBalance
+                        tmpChannel.RemoteBalance = chkChannel.RemoteBalance
+                        tmpChannel.LocalCapRate = CType(tmpChannel.LocalBalance, Single) / CType(tmpChannel.Capacity, Single) * 100
+
+                        AllChannels_cash(k) = tmpChannel
+                        Exit For
+                    End If
+                End If
+
+            Next
+        Next
+
         AutoFeeSet_ChannelsCollection.Clear()
-        Another_ChannelsCollection.Clear()
 
         For i = 0 To AllChannels_cash.Count - 1
 
@@ -910,8 +1003,6 @@ repPayInvoice:
 
             If tmpChannel.AutoFeeCont > 0 Then
                 AutoFeeSet_ChannelsCollection.Add(tmpChannel)
-            Else
-                Another_ChannelsCollection.Add(tmpChannel)
             End If
         Next
 
@@ -931,18 +1022,7 @@ repPayInvoice:
             FeeSetting2(i) = CType(Me.TableLayoutPanel1.Controls("TextBox_Fee2_" + i.ToString).Text, Single)
         Next
 
-        checkAllChannels.Clear()
-        checkAllChannels = lnd_restApi.getAllCannels() 'temporary update channel info
-
         For i = 0 To AutoFeeSet_ChannelsCollection.Count - 1
-
-            If Not feeCont_Force Then
-                check_localBalance = checkLocalBalance(i)
-
-                If check_localBalance = False Then
-                    Continue For
-                End If
-            End If
 
             Dim tmpChannel As channel = New channel
             tmpChannel = AutoFeeSet_ChannelsCollection(i)
@@ -991,15 +1071,14 @@ repPayInvoice:
             Dim setFeeRate As String = fee.ToString("0")
             Dim setHTLCs As String = HTLC_max.ToString(0) + "000"
             Dim oldFee As String = tmpChannel.LocalFeeRate
-            Dim oldCapRate As String = tmpChannel.LocalCapRate.ToString
+            Dim newCapRate As String = tmpChannel.LocalCapRate.ToString
 
             tmpChannel.LocalFeeRate = setFeeRate
-            tmpChannel.LocalCapRate = CType(tmpChannel.LocalBalance, Single) / CType(tmpChannel.Capacity, Single) * 100
 
             If Not setFeeRate = oldFee Then
                 Dim res As String = lnd_restApi.postChannelPolicy(tmpChannel.ChanPointID, BaseFee, setFeeRate, setHTLCs, TimeLock)
-                TextBox_log.Text += "*** Update fee " + tmpChannel.AliasName + " :(" + oldCapRate + ")(Old fee=" + oldFee + ") --> (" + tmpChannel.LocalCapRate.ToString + ")(New fee=" + setFeeRate + ")" + vbCrLf
-                TextBox_message.Text = "*** Update fee " + tmpChannel.AliasName + " :(" + oldCapRate + ")(Old fee=" + oldFee + ") --> (" + tmpChannel.LocalCapRate.ToString + ")(New fee=" + setFeeRate + ")"
+                TextBox_log.Text += "*** Update fee " + tmpChannel.AliasName + " :(Old fee=" + oldFee + ") --> (LocalCapRate=" + newCapRate + "%)(New fee=" + setFeeRate + ")" + vbCrLf
+                TextBox_message.Text = "*** Update fee " + tmpChannel.AliasName + " :(Old fee=" + oldFee + ") --> (LocalCapRate=" + newCapRate + "%)(New fee=" + setFeeRate + ")"
                 'Else
                 'TextBox_log.Text += "*** No update " + tmpChannel.AliasName + " :(" + oldCapRate + ")(Old fee=" + oldFee + ") --> (" + tmpChannel.LocalCapRate.ToString + ")(New fee=" + setFeeRate + ")" + vbCrLf
             End If
@@ -1022,66 +1101,7 @@ repPayInvoice:
             Next
         Next
 
-        For i = 0 To Another_ChannelsCollection.Count - 1
-            Dim tmpChannel As channel = New channel
-            tmpChannel = Another_ChannelsCollection(i)
-
-            For j = 0 To AllChannels_cash.Count - 1
-                Dim tmpChannel1 As channel = New channel
-                tmpChannel1 = AllChannels_cash(j)
-
-                If tmpChannel1.ChanID = tmpChannel.ChanID Then
-                    If (Not tmpChannel.LocalBalance = tmpChannel1.LocalBalance) And tmpChannel.Active Then
-
-                        tmpChannel1.LocalBalance = tmpChannel.LocalBalance
-                        tmpChannel1.RemoteBalance = tmpChannel.RemoteBalance
-                        tmpChannel1.LocalCapRate = CType(tmpChannel.LocalBalance, Single) / CType(tmpChannel.Capacity, Single) * 100
-                        AllChannels_cash(j) = tmpChannel1
-                        Exit For
-                    End If
-                End If
-
-            Next
-        Next
-
-
     End Sub
-
-    Private Function checkLocalBalance(ByVal i As Integer) As Boolean
-
-        Dim res As Boolean
-        Dim chkChannel As channel = New channel
-        chkChannel = AutoFeeSet_ChannelsCollection(i)
-
-        For j = 0 To checkAllChannels.Count - 1
-
-            Dim tmpChannel As channel = New channel
-            tmpChannel = checkAllChannels(j)
-
-            If tmpChannel.ChanID = chkChannel.ChanID Then
-                If (Not tmpChannel.LocalBalance = chkChannel.LocalBalance) And tmpChannel.Active Then
-
-                    chkChannel.LocalBalance = tmpChannel.LocalBalance
-                    chkChannel.RemoteBalance = tmpChannel.RemoteBalance
-                    AutoFeeSet_ChannelsCollection(i) = chkChannel
-                    res = True
-                    GoTo end_checkLocalBalance
-                Else
-                    res = False
-                    GoTo end_checkLocalBalance
-                End If
-
-            End If
-
-        Next
-
-        res = False
-
-end_checkLocalBalance:
-
-        Return res
-
-    End Function
 
     Private Sub RebalanceNodeConfigFileToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RebalanceNodeConfigFileToolStripMenuItem.Click
 
@@ -1340,6 +1360,10 @@ end_checkLocalBalance:
     End Sub
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+
+        If duringChannelUpdate Then
+            Exit Sub
+        End If
 
         autoFeeChannelsCollection()
         autoFeeUpdate(0)
