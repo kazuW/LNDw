@@ -1,4 +1,0 @@
-https://localhost:8080
-C:\Users\quick\AppData\Local\Lnd\data\chain\bitcoin\mainnet\
-control_fee1,0.8,1,1,1,1.2,1.2,1.4,1.4,1.6,1.6
-control_fee2,0.8,1,1,1,1,1.8,2,3,4,6
