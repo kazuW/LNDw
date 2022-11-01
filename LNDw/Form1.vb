@@ -107,7 +107,7 @@ Public Class Form1
         ListView_main.Items(6).SubItems.Add(wallet_balance.ToString)
         ListView_main.Items(7).SubItems.Add(lightning_balance.ToString)
 
-
+        dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
         TextBox_log.Text += dt + ": Done nodeinfo updeate!" + vbCrLf
 
 
@@ -159,6 +159,7 @@ Public Class Form1
         AllChannels.Sort()
         AllChannels_cash = AllChannels
 
+        dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
         TextBox_log.Text += dt + ": Initial all channels updeate!" + vbCrLf
         TextBox_message.Text = "channels update done."
         updateAllChannels()
@@ -181,6 +182,7 @@ Public Class Form1
             ListView_cannels.Items.Add(New ListViewItem(item_channel))
         Next
 
+        dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
         TextBox_log.Text += dt + ": Done all channels update!" + vbCrLf
 
 
@@ -255,6 +257,7 @@ Public Class Form1
         tmpChannel.LocalCapRateTarget(0) = str(0)
         tmpChannel.LocalCapRateTarget(1) = str(1)
 
+        dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
         TextBox_log.Text += dt + ": node configration change [" + ListView_cannels.Items(numIndex).SubItems(0).Text + "]" + vbCrLf
 
 
@@ -302,6 +305,7 @@ Public Class Form1
 
         Loop
 
+        dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
         TextBox_log.Text += dt + ": read configration file [" + FileName + "]" + vbCrLf
 
     End Sub
@@ -349,6 +353,7 @@ Public Class Form1
 
         Loop
 
+        dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
         TextBox_log.Text += dt + ": read fee rate setting file [" + FileName + "]" + vbCrLf
 
         updateAllChannels()
@@ -404,6 +409,7 @@ Public Class Form1
             pubkey = TextBox_pubkey.Text
             timeout = TextBox_timeout_reb.Text
             freezeButton()
+            dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
             TextBox_log.Text += dt + ": rebalance start(lncli version)!!" + vbCrLf
             BackgroundWorker1.RunWorkerAsync()
 
@@ -412,6 +418,7 @@ Public Class Form1
             pubkey = TextBox_pubkey.Text
             timeout = TextBox_timeout_reb.Text
             freezeButton()
+            dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
             TextBox_log.Text += dt + ": rebalance start(query version)!!" + vbCrLf
             BackgroundWorker2.RunWorkerAsync()
 
@@ -619,9 +626,11 @@ reStartRebalance_query:
 
         If e.Cancelled = True Then
             activeButton()
+            dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
             TextBox_log.Text += dt + ": Rebalance(query) was canceled." + vbCrLf
             TextBox_message.Text = "Rebalance(query) was canceled."
         Else
+            dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
             TextBox_log.Text += dt + ": Rebalance(query) done." + vbCrLf
             TextBox_message.Text = "Rebalance(query) done."
             activeButton()
@@ -759,9 +768,11 @@ repPayInvoice:
 
         If e.Cancelled = True Then
             activeButton()
+            dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
             TextBox_log.Text += dt + ": Rebalance was canceled." + vbCrLf
             TextBox_message.Text = "Rebalance was canceled."
         Else
+            dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
             TextBox_log.Text += dt + ": Rebalance done." + vbCrLf
             TextBox_message.Text = "Rebalance done."
             activeButton()
@@ -933,6 +944,7 @@ repPayInvoice:
             autoFeeChannelsCollection()
             autoFeeUpdate(1)
 
+            dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
             TextBox_log.Text += dt + ": Done auto fee setting!" + vbCrLf
             TextBox_message.Text = "fee update done!!"
 
@@ -944,6 +956,7 @@ repPayInvoice:
 
                 Button_autoFeeUpdate.Text = "Auto Fee update"
                 Timer1.Enabled = False
+                dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
                 TextBox_log.Text += dt + ": Stop auto fee update!!" + vbCrLf
                 TextBox_message.Text = "Auto fee update was canceled."
                 Exit Sub
@@ -953,6 +966,7 @@ repPayInvoice:
                 Dim tspan As Integer = CType(TextBox_feeIntervals.Text, Integer) * 60 'seconds
                 Timer1.Interval = tspan * 1000
                 Timer1.Enabled = True
+                dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
                 TextBox_log.Text += dt + ": Start auto fee update!!" + vbCrLf
                 TextBox_message.Text = "Auto fee update start."
                 Button_autoFeeUpdate.Text = "Cancel Fee update"
@@ -1149,6 +1163,7 @@ repPayInvoice:
 
         Loop
 
+        dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
         TextBox_log.Text += dt + ": read rebalance setting file [" + FileName + "]" + vbCrLf
 
         updateAllChannels()
@@ -1336,6 +1351,7 @@ repPayInvoice:
 
         updateAllChannels()
 
+        dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
         TextBox_log.Text += dt + ": reset auto fee control all channels" + vbCrLf
 
 
@@ -1354,6 +1370,7 @@ repPayInvoice:
 
         updateAllChannels()
 
+        dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
         TextBox_log.Text += dt + ": reset rebalance direction all channels" + vbCrLf
 
 
