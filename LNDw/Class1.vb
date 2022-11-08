@@ -29,6 +29,7 @@ Public Class channel
     Private _localCapRate As Single
     Private _localCapRateTarget(1) As Single
     Private _baseFeeRate As Single
+    Private _ambossFeeRate As String
     Private _active As Boolean
 
 
@@ -199,6 +200,16 @@ Public Class channel
         End Get
         Set(ByVal value As Single)
             Me._baseFeeRate = value
+        End Set
+    End Property
+
+    'Amboss Fee Rate
+    Public Property AmbossFeeRate() As String
+        Get
+            Return Me._ambossFeeRate
+        End Get
+        Set(ByVal value As String)
+            Me._ambossFeeRate = value
         End Set
     End Property
 

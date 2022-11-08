@@ -12,6 +12,7 @@ Imports System.Text
 Imports System.IO
 Imports System.Reflection.Metadata
 Imports System.Windows
+Imports System.Net.WebRequestMethods
 
 Public Class lnd_restApi
 
@@ -1051,6 +1052,62 @@ Public Class lnd_restApi
 
     End Function
 
+    Public Function getAmbossFee(ByVal Pubkey As String) As String
+
+        Dim res As String = "FAILED"
+        Dim endpointUri As Uri = New Uri("https://api.amboss.space")
+        Dim method As String = "POST"
+        Dim path As String = "graphql"
+        Dim timeout As Integer = CType(Form1.timeout, Int32)
+        Dim x As Int16 = 0
+
+        Dim query As String = "query Query($pubkey: String!) {getNode(pubkey: $pubkey) {graph_info {channels {fee_info {remote {weighted_corrected}}}}}}"
+        Dim query1 As String = "{'pubkey': '" + Pubkey + "'}"
+        Dim body As String = "{'query': '" + query + "','variables': " + query1 + "}"
+        body = body.Replace("'", Chr(&H22))
+
+        Dim request As HttpRequestMessage = New HttpRequestMessage(New HttpMethod(method), path)
+        Dim content As StringContent = New StringContent(body)
+
+        content.Headers.ContentType = New MediaTypeHeaderValue("application/json")
+        request.Headers.Add("Authorization", "Bearer " + Form1.TextBox_AmbossApiKey.Text)
+        request.Content = content
+        'request.Timeout
+
+        Dim task1 = Task.Run(Async Function()
+                                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls Or SecurityProtocolType.Tls11 Or SecurityProtocolType.Tls12
+
+                                 Dim client As HttpClient = New HttpClient()
+
+                                 client.BaseAddress = endpointUri
+                                 client.Timeout = TimeSpan.FromSeconds(timeout)
+                                 Try
+                                     Dim message As HttpResponseMessage = Await (client.SendAsync(request))
+                                     Dim response_json As String = Await (message.Content.ReadAsStringAsync())
+
+                                     Dim JsonObject As Object = JsonConvert.DeserializeObject(response_json)
+                                     Dim resSingle As Single = CType(JsonObject("data")("getNode")("graph_info")("channels")("fee_info")("remote")("weighted_corrected"), Single)
+                                     res = resSingle.ToString(0)
+
+                                 Catch e As TaskCanceledException
+                                     res = "FAILED"
+                                     Form1.tmpResult = Form1.dt + ": Error timeout LND(send route)" + vbCrLf
+                                 End Try
+
+                             End Function)
+
+        Try
+            task1.Wait()
+        Catch ex As Exception
+            Form1.tmpResult = Form1.dt + ": Error get AMBOSS fee" + vbCrLf
+            Form1.tmpResult += vbTab + "Please check config setting!!" + vbCrLf
+            'MessageBox.Show("Please check config setting!!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            'Console.Beep()
+        End Try
+
+        Return res
+
+    End Function
 
     Private Sub generateMacaroon()
 

@@ -177,7 +177,7 @@ Public Class Form1
             Dim item_channel() As String = {tmpChannel.AliasName, tmpChannel.LocalCapRate.ToString(0) _
                 , tmpChannel.LocalFeeRate, tmpChannel.RemoteFeeRate, tmpChannel.ChanDirection _
                 , tmpChannel.LocalCapRateTarget(0).ToString(0) + "," + tmpChannel.LocalCapRateTarget(1).ToString(0) _
-                , tmpChannel.BaseFeeRate.ToString(0), tmpChannel.AutoFeeCont.ToString}
+                , tmpChannel.BaseFeeRate.ToString(0), tmpChannel.AutoFeeCont.ToString, tmpChannel.AmbossFeeRate}
 
             ListView_cannels.Items.Add(New ListViewItem(item_channel))
         Next
@@ -287,6 +287,8 @@ Public Class Form1
             strData = tmpData.Split(",")
 
             Select Case strData(0)
+                Case "amboss_apikey"
+                    TextBox_AmbossApiKey.Text = strData(1)
                 Case "uri_path"
                     TextBox_uri.Text = strData(1)
                 Case "macaroon_path"
@@ -1253,8 +1255,9 @@ repPayInvoice:
         FileName = SaveFileDialog1.FileName
         Fw = New IO.StreamWriter(FileName, False, System.Text.Encoding.Default)
 
-        Fw.WriteLine(TextBox_uri.Text)
-        Fw.WriteLine(TextBox_macaroon.Text)
+        Fw.WriteLine("uri_path," + TextBox_uri.Text)
+        Fw.WriteLine("macaroon_path," + TextBox_macaroon.Text)
+        Fw.WriteLine("amboss_apikey," + TextBox_AmbossApiKey.Text)
 
         Dim tmpFeeSet1 As String = "control_fee1"
         Dim tmpFeeSet2 As String = "control_fee2"
@@ -1394,6 +1397,43 @@ repPayInvoice:
     Private Sub Button_logClear_Click(sender As Object, e As EventArgs) Handles Button_logClear.Click
 
         TextBox_log.Text = ""
+
+    End Sub
+
+    Private Sub Button_getAmbossFee_Click(sender As Object, e As EventArgs) Handles Button_getAmbossFee.Click
+
+        For i = 0 To AllChannels_cash.Count - 1
+            Dim tmpChannel As channel = New channel
+            tmpChannel = AllChannels_cash(i)
+            tmpChannel.AmbossFeeRate = lnd_restApi.getAmbossFee(tmpChannel.PubKey)
+
+            AllChannels_cash(i) = tmpChannel
+
+        Next
+
+        updateAllChannels()
+
+        dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
+        TextBox_log.Text += dt + ": Get AMBOSS Corrected Average fee!" + vbCrLf
+
+    End Sub
+
+    Private Sub Button_AmbToBasefee_Click(sender As Object, e As EventArgs)
+
+        For i = 0 To AllChannels_cash.Count - 1
+            Dim tmpChannel As channel = New channel
+            tmpChannel = AllChannels_cash(i)
+            tmpChannel.BaseFeeRate = CType(tmpChannel.AmbossFeeRate, Single)
+
+            AllChannels_cash(i) = tmpChannel
+
+        Next
+
+        updateAllChannels()
+
+        dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
+        TextBox_log.Text += dt + ": Copy AMBOSS fee -> Base fee." + vbCrLf
+
 
     End Sub
 

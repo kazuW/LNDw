@@ -23,16 +23,17 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim ListViewItem11 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem(New String() {"Alias :"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, New System.Drawing.Font("Yu Gothic UI", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point))
-        Dim ListViewItem12 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
-        Dim ListViewItem13 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Active channels :")
-        Dim ListViewItem14 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Inactive channels :")
-        Dim ListViewItem15 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Pending channels :")
-        Dim ListViewItem16 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
-        Dim ListViewItem17 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("On-chain balance :")
-        Dim ListViewItem18 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Lightning balance :")
-        Dim ListViewItem19 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
-        Dim ListViewItem20 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Network :")
+        Dim ListViewItem1 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem(New String() {"Alias :"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, New System.Drawing.Font("Yu Gothic UI", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point))
+        Dim ListViewItem2 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
+        Dim ListViewItem3 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Active channels :")
+        Dim ListViewItem4 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Inactive channels :")
+        Dim ListViewItem5 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Pending channels :")
+        Dim ListViewItem6 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
+        Dim ListViewItem7 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("On-chain balance :")
+        Dim ListViewItem8 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Lightning balance :")
+        Dim ListViewItem9 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
+        Dim ListViewItem10 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Network :")
+        Dim Button_AmbToBasefee As System.Windows.Forms.Button
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FileFToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.NodeConfigFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -68,8 +69,10 @@ Partial Class Form1
         Me.Target = New System.Windows.Forms.ColumnHeader()
         Me.BaseFee = New System.Windows.Forms.ColumnHeader()
         Me.FeeControl = New System.Windows.Forms.ColumnHeader()
+        Me.AmbossFee = New System.Windows.Forms.ColumnHeader()
         Me.TabPage_rebalance = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
+        Me.Button_getAmbossFee = New System.Windows.Forms.Button()
         Me.Button_feeCont = New System.Windows.Forms.Button()
         Me.Button_rebDirection = New System.Windows.Forms.Button()
         Me.Button_mcReset = New System.Windows.Forms.Button()
@@ -104,6 +107,8 @@ Partial Class Form1
         Me.Button_getMC = New System.Windows.Forms.Button()
         Me.TabPage_conf = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.TextBox_AmbossApiKey = New System.Windows.Forms.TextBox()
+        Me.TextBox34 = New System.Windows.Forms.TextBox()
         Me.TextBox_feeIntervals = New System.Windows.Forms.TextBox()
         Me.TextBox33 = New System.Windows.Forms.TextBox()
         Me.TextBox20 = New System.Windows.Forms.TextBox()
@@ -164,6 +169,7 @@ Partial Class Form1
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.TextBox_message = New System.Windows.Forms.TextBox()
+        Button_AmbToBasefee = New System.Windows.Forms.Button()
         Me.MenuStrip1.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPage_main.SuspendLayout()
@@ -258,7 +264,7 @@ Partial Class Form1
         Me.ListView_main.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnTitle, Me.ColumnData})
         Me.ListView_main.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ListView_main.Font = New System.Drawing.Font("Yu Gothic UI", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.ListView_main.Items.AddRange(New System.Windows.Forms.ListViewItem() {ListViewItem11, ListViewItem12, ListViewItem13, ListViewItem14, ListViewItem15, ListViewItem16, ListViewItem17, ListViewItem18, ListViewItem19, ListViewItem20})
+        Me.ListView_main.Items.AddRange(New System.Windows.Forms.ListViewItem() {ListViewItem1, ListViewItem2, ListViewItem3, ListViewItem4, ListViewItem5, ListViewItem6, ListViewItem7, ListViewItem8, ListViewItem9, ListViewItem10})
         Me.ListView_main.Location = New System.Drawing.Point(3, 3)
         Me.ListView_main.Name = "ListView_main"
         Me.ListView_main.Size = New System.Drawing.Size(806, 500)
@@ -414,7 +420,7 @@ Partial Class Form1
         '
         Me.ListView_cannels.Activation = System.Windows.Forms.ItemActivation.OneClick
         Me.ListView_cannels.Alignment = System.Windows.Forms.ListViewAlignment.Left
-        Me.ListView_cannels.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.AliasName, Me.LocalCapRatio, Me.LocalFee, Me.RemoteFee, Me.Direction, Me.Target, Me.BaseFee, Me.FeeControl})
+        Me.ListView_cannels.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.AliasName, Me.LocalCapRatio, Me.LocalFee, Me.RemoteFee, Me.Direction, Me.Target, Me.BaseFee, Me.FeeControl, Me.AmbossFee})
         Me.ListView_cannels.Dock = System.Windows.Forms.DockStyle.Top
         Me.ListView_cannels.Font = New System.Drawing.Font("Yu Gothic UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.ListView_cannels.GridLines = True
@@ -468,6 +474,11 @@ Partial Class Form1
         Me.FeeControl.Text = "FeeAC"
         Me.FeeControl.Width = 70
         '
+        'AmbossFee
+        '
+        Me.AmbossFee.Text = "AmbFee"
+        Me.AmbossFee.Width = 75
+        '
         'TabPage_rebalance
         '
         Me.TabPage_rebalance.Controls.Add(Me.TableLayoutPanel2)
@@ -481,13 +492,16 @@ Partial Class Form1
         '
         'TableLayoutPanel2
         '
-        Me.TableLayoutPanel2.ColumnCount = 4
+        Me.TableLayoutPanel2.ColumnCount = 5
         Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200.0!))
         Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200.0!))
-        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50.0!))
+        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 10.0!))
         Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200.0!))
-        Me.TableLayoutPanel2.Controls.Add(Me.Button_feeCont, 3, 5)
-        Me.TableLayoutPanel2.Controls.Add(Me.Button_rebDirection, 3, 4)
+        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200.0!))
+        Me.TableLayoutPanel2.Controls.Add(Button_AmbToBasefee, 4, 3)
+        Me.TableLayoutPanel2.Controls.Add(Me.Button_getAmbossFee, 4, 2)
+        Me.TableLayoutPanel2.Controls.Add(Me.Button_feeCont, 4, 1)
+        Me.TableLayoutPanel2.Controls.Add(Me.Button_rebDirection, 4, 0)
         Me.TableLayoutPanel2.Controls.Add(Me.Button_mcReset, 3, 9)
         Me.TableLayoutPanel2.Controls.Add(Me.Button_setMC, 3, 8)
         Me.TableLayoutPanel2.Controls.Add(Me.TextBox_mcMFR, 1, 11)
@@ -537,12 +551,22 @@ Partial Class Form1
         Me.TableLayoutPanel2.Size = New System.Drawing.Size(806, 500)
         Me.TableLayoutPanel2.TabIndex = 0
         '
+        'Button_getAmbossFee
+        '
+        Me.Button_getAmbossFee.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Button_getAmbossFee.Location = New System.Drawing.Point(613, 83)
+        Me.Button_getAmbossFee.Name = "Button_getAmbossFee"
+        Me.Button_getAmbossFee.Size = New System.Drawing.Size(194, 34)
+        Me.Button_getAmbossFee.TabIndex = 32
+        Me.Button_getAmbossFee.Text = "Get Amboss fee"
+        Me.Button_getAmbossFee.UseVisualStyleBackColor = True
+        '
         'Button_feeCont
         '
         Me.Button_feeCont.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Button_feeCont.Location = New System.Drawing.Point(453, 203)
+        Me.Button_feeCont.Location = New System.Drawing.Point(613, 43)
         Me.Button_feeCont.Name = "Button_feeCont"
-        Me.Button_feeCont.Size = New System.Drawing.Size(350, 34)
+        Me.Button_feeCont.Size = New System.Drawing.Size(194, 34)
         Me.Button_feeCont.TabIndex = 31
         Me.Button_feeCont.Text = "fee control reset"
         Me.Button_feeCont.UseVisualStyleBackColor = True
@@ -550,19 +574,19 @@ Partial Class Form1
         'Button_rebDirection
         '
         Me.Button_rebDirection.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Button_rebDirection.Location = New System.Drawing.Point(453, 163)
+        Me.Button_rebDirection.Location = New System.Drawing.Point(613, 3)
         Me.Button_rebDirection.Name = "Button_rebDirection"
-        Me.Button_rebDirection.Size = New System.Drawing.Size(350, 34)
+        Me.Button_rebDirection.Size = New System.Drawing.Size(194, 34)
         Me.Button_rebDirection.TabIndex = 30
-        Me.Button_rebDirection.Text = "rebalace direction reset"
+        Me.Button_rebDirection.Text = "rebalace-dir reset"
         Me.Button_rebDirection.UseVisualStyleBackColor = True
         '
         'Button_mcReset
         '
         Me.Button_mcReset.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Button_mcReset.Location = New System.Drawing.Point(453, 363)
+        Me.Button_mcReset.Location = New System.Drawing.Point(413, 363)
         Me.Button_mcReset.Name = "Button_mcReset"
-        Me.Button_mcReset.Size = New System.Drawing.Size(350, 34)
+        Me.Button_mcReset.Size = New System.Drawing.Size(194, 34)
         Me.Button_mcReset.TabIndex = 29
         Me.Button_mcReset.Text = "Reset Mission Control"
         Me.Button_mcReset.UseVisualStyleBackColor = True
@@ -570,9 +594,9 @@ Partial Class Form1
         'Button_setMC
         '
         Me.Button_setMC.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Button_setMC.Location = New System.Drawing.Point(453, 323)
+        Me.Button_setMC.Location = New System.Drawing.Point(413, 323)
         Me.Button_setMC.Name = "Button_setMC"
-        Me.Button_setMC.Size = New System.Drawing.Size(350, 34)
+        Me.Button_setMC.Size = New System.Drawing.Size(194, 34)
         Me.Button_setMC.TabIndex = 28
         Me.Button_setMC.Text = "Set Mission Control"
         Me.Button_setMC.UseVisualStyleBackColor = True
@@ -636,7 +660,7 @@ Partial Class Form1
         Me.TextBox31.Location = New System.Drawing.Point(3, 243)
         Me.TextBox31.Name = "TextBox31"
         Me.TextBox31.ReadOnly = True
-        Me.TextBox31.Size = New System.Drawing.Size(800, 34)
+        Me.TextBox31.Size = New System.Drawing.Size(604, 34)
         Me.TextBox31.TabIndex = 20
         Me.TextBox31.Text = "Mission control"
         Me.TextBox31.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
@@ -708,7 +732,7 @@ Partial Class Form1
         '
         Me.CheckBox_useQuery.AutoSize = True
         Me.CheckBox_useQuery.Font = New System.Drawing.Font("Yu Gothic UI", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.CheckBox_useQuery.Location = New System.Drawing.Point(453, 123)
+        Me.CheckBox_useQuery.Location = New System.Drawing.Point(413, 123)
         Me.CheckBox_useQuery.Name = "CheckBox_useQuery"
         Me.CheckBox_useQuery.Size = New System.Drawing.Size(130, 32)
         Me.CheckBox_useQuery.TabIndex = 13
@@ -719,7 +743,7 @@ Partial Class Form1
         '
         Me.CheckBox_autoFeeCont.AutoSize = True
         Me.CheckBox_autoFeeCont.Font = New System.Drawing.Font("Yu Gothic UI", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.CheckBox_autoFeeCont.Location = New System.Drawing.Point(453, 83)
+        Me.CheckBox_autoFeeCont.Location = New System.Drawing.Point(413, 83)
         Me.CheckBox_autoFeeCont.Name = "CheckBox_autoFeeCont"
         Me.CheckBox_autoFeeCont.Size = New System.Drawing.Size(187, 32)
         Me.CheckBox_autoFeeCont.TabIndex = 12
@@ -730,7 +754,7 @@ Partial Class Form1
         '
         Me.CheckBox_autoRebalance.AutoSize = True
         Me.CheckBox_autoRebalance.Font = New System.Drawing.Font("Yu Gothic UI", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.CheckBox_autoRebalance.Location = New System.Drawing.Point(453, 3)
+        Me.CheckBox_autoRebalance.Location = New System.Drawing.Point(413, 3)
         Me.CheckBox_autoRebalance.Name = "CheckBox_autoRebalance"
         Me.CheckBox_autoRebalance.Size = New System.Drawing.Size(175, 32)
         Me.CheckBox_autoRebalance.TabIndex = 11
@@ -836,7 +860,7 @@ Partial Class Form1
         '
         Me.CheckBox_reckless.AutoSize = True
         Me.CheckBox_reckless.Font = New System.Drawing.Font("Yu Gothic UI", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.CheckBox_reckless.Location = New System.Drawing.Point(453, 43)
+        Me.CheckBox_reckless.Location = New System.Drawing.Point(413, 43)
         Me.CheckBox_reckless.Name = "CheckBox_reckless"
         Me.CheckBox_reckless.Size = New System.Drawing.Size(110, 32)
         Me.CheckBox_reckless.TabIndex = 4
@@ -846,9 +870,9 @@ Partial Class Form1
         'Button_getMC
         '
         Me.Button_getMC.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Button_getMC.Location = New System.Drawing.Point(453, 283)
+        Me.Button_getMC.Location = New System.Drawing.Point(413, 283)
         Me.Button_getMC.Name = "Button_getMC"
-        Me.Button_getMC.Size = New System.Drawing.Size(350, 34)
+        Me.Button_getMC.Size = New System.Drawing.Size(194, 34)
         Me.Button_getMC.TabIndex = 27
         Me.Button_getMC.Text = "Get Mission Control"
         Me.Button_getMC.UseVisualStyleBackColor = True
@@ -878,6 +902,8 @@ Partial Class Form1
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10.0!))
+        Me.TableLayoutPanel1.Controls.Add(Me.TextBox_AmbossApiKey, 1, 11)
+        Me.TableLayoutPanel1.Controls.Add(Me.TextBox34, 0, 11)
         Me.TableLayoutPanel1.Controls.Add(Me.TextBox_feeIntervals, 1, 7)
         Me.TableLayoutPanel1.Controls.Add(Me.TextBox33, 0, 7)
         Me.TableLayoutPanel1.Controls.Add(Me.TextBox20, 0, 10)
@@ -928,7 +954,8 @@ Partial Class Form1
         Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
-        Me.TableLayoutPanel1.RowCount = 12
+        Me.TableLayoutPanel1.RowCount = 13
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
@@ -943,6 +970,25 @@ Partial Class Form1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(806, 500)
         Me.TableLayoutPanel1.TabIndex = 0
+        '
+        'TextBox_AmbossApiKey
+        '
+        Me.TableLayoutPanel1.SetColumnSpan(Me.TextBox_AmbossApiKey, 10)
+        Me.TextBox_AmbossApiKey.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TextBox_AmbossApiKey.Location = New System.Drawing.Point(203, 443)
+        Me.TextBox_AmbossApiKey.Name = "TextBox_AmbossApiKey"
+        Me.TextBox_AmbossApiKey.Size = New System.Drawing.Size(600, 31)
+        Me.TextBox_AmbossApiKey.TabIndex = 48
+        '
+        'TextBox34
+        '
+        Me.TextBox34.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TextBox34.Location = New System.Drawing.Point(3, 443)
+        Me.TextBox34.Name = "TextBox34"
+        Me.TextBox34.ReadOnly = True
+        Me.TextBox34.Size = New System.Drawing.Size(194, 31)
+        Me.TextBox34.TabIndex = 47
+        Me.TextBox34.Text = "Amboss API key :"
         '
         'TextBox_feeIntervals
         '
@@ -1460,6 +1506,17 @@ Partial Class Form1
         Me.TextBox_message.Size = New System.Drawing.Size(800, 31)
         Me.TextBox_message.TabIndex = 5
         '
+        'Button_AmbToBasefee
+        '
+        Button_AmbToBasefee.Dock = System.Windows.Forms.DockStyle.Fill
+        Button_AmbToBasefee.Location = New System.Drawing.Point(613, 123)
+        Button_AmbToBasefee.Name = "Button_AmbToBasefee"
+        Button_AmbToBasefee.Size = New System.Drawing.Size(194, 34)
+        Button_AmbToBasefee.TabIndex = 33
+        Button_AmbToBasefee.Text = "Amboss -> Base fee"
+        Button_AmbToBasefee.UseVisualStyleBackColor = True
+        AddHandler Button_AmbToBasefee.Click, AddressOf Me.Button_AmbToBasefee_Click
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(10.0!, 25.0!)
@@ -1626,4 +1683,8 @@ Partial Class Form1
     Friend WithEvents Timer1 As Timer
     Friend WithEvents TextBox_message As TextBox
     Friend WithEvents Button_logClear As Button
+    Friend WithEvents AmbossFee As ColumnHeader
+    Friend WithEvents Button_getAmbossFee As Button
+    Friend WithEvents TextBox_AmbossApiKey As TextBox
+    Friend WithEvents TextBox34 As TextBox
 End Class
