@@ -199,7 +199,7 @@ Public Class Form1
             Dim item_channel() As String = {tmpChannel.AliasName, tmpChannel.LocalCapRate.ToString(0) _
                 , tmpChannel.LocalFeeRate, tmpChannel.RemoteFeeRate, tmpChannel.ChanDirection _
                 , tmpChannel.LocalCapRateTarget(0).ToString(0) + "," + tmpChannel.LocalCapRateTarget(1).ToString(0) _
-                , tmpChannel.BaseFeeRate.ToString(0), tmpChannel.AutoFeeCont.ToString}
+                , tmpChannel.BaseFeeRate.ToString(0), tmpChannel.AutoFeeCont.ToString, tmpChannel.AmbossFeeRate}
 
             ListView_cannels.Items.Add(New ListViewItem(item_channel))
         Next
