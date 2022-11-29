@@ -14,3 +14,6 @@ https://learn.microsoft.com/ja-jp/visualstudio/releases/2022/release-notes
 Or Download binary files from release.
 
 # Using LNDw
+
+LNDw.exe
+
