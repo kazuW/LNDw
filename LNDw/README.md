@@ -11,6 +11,6 @@ https://learn.microsoft.com/ja-jp/visualstudio/releases/2022/release-notes
 2. Project file open : LNDw.sln
 3. Build release
 
-Or Download binary files.
+Or Download binary files from release.
 
 # Using LNDw
