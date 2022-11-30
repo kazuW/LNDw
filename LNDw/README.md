@@ -32,6 +32,7 @@ LNDw.exe
 
 2. "Channels" tab --> click "update channel" button.
 
-![LNDw_setting](https://user-images.githubusercontent.com/35624002/204709116-6a788af3-32b0-4925-aa49-fc164ad80573.gif)
+![LNDw_channel](https://user-images.githubusercontent.com/35624002/204709721-0896321e-3c5d-431f-a1fb-693ac256324f.gif)
+
 
 
