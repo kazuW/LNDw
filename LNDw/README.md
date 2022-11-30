@@ -26,3 +26,6 @@ import personal certificate("tls.cert") into certificate stores using "certmgr.m
 LNDw.exe
 
 # Configure LNDw
+1. "Config setting" tab --> Input LND endpoint uri and macaroon path.
+https://user-images.githubusercontent.com/35624002/204707251-afd5a7fb-ae5d-469c-aa26-c0b74c666047.gif
+2. 
