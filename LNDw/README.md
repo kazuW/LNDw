@@ -28,6 +28,7 @@ LNDw.exe
 # Configure LNDw
 1. "Config setting" tab --> input LND endpoint uri and macaroon path.
 ![LNDw_setting](https://user-images.githubusercontent.com/35624002/204707251-afd5a7fb-ae5d-469c-aa26-c0b74c666047.gif)
+
 2. "Channels" tab --> click "update channel" button.
 ![LNDw_setting](https://user-images.githubusercontent.com/35624002/204709116-6a788af3-32b0-4925-aa49-fc164ad80573.gif)
 3.
