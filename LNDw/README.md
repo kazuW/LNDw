@@ -13,7 +13,16 @@ https://learn.microsoft.com/ja-jp/visualstudio/releases/2022/release-notes
 
 Or Download binary files from release.
 
+# Configure Windows(for SSL connection)
+
+import personal certificate("tls.cert") into certificate stores using "certmgr.msc" 
+1. Open a new command window.
+2. Enter "certmgr.msc" as a command.
+3. "Trusted Root Certification Authorities" -> "All Tasks" -> "Import"
+4. Choose "tls.cert" file
+
 # Using LNDw
 
 LNDw.exe
 
+# Configure LNDw
