@@ -34,3 +34,4 @@ LNDw.exe
 
 ![LNDw_setting](https://user-images.githubusercontent.com/35624002/204709116-6a788af3-32b0-4925-aa49-fc164ad80573.gif)
 
+
