@@ -88,6 +88,10 @@ Public Class Form1
 
     Private Sub UpdateNodeInfo()
 
+        uri_path = TextBox_uri.Text
+        macaroon_path = TextBox_macaroon.Text
+        timeout = TextBox_timeout_reb.Text
+
         Dim MyNode As node_info = lnd_restApi.getInfo()
 
         ListView_main.Items(0).SubItems.Add(MyNode.AliasName)

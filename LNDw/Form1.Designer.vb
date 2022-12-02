@@ -23,6 +23,7 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim Button_AmbToBasefee As System.Windows.Forms.Button
         Dim ListViewItem1 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem(New String() {"Alias :"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, New System.Drawing.Font("Yu Gothic UI", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point))
         Dim ListViewItem2 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
         Dim ListViewItem3 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Active channels :")
@@ -33,7 +34,6 @@ Partial Class Form1
         Dim ListViewItem8 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Lightning balance :")
         Dim ListViewItem9 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("")
         Dim ListViewItem10 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem("Network :")
-        Dim Button_AmbToBasefee As System.Windows.Forms.Button
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FileFToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.NodeConfigFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -180,6 +180,17 @@ Partial Class Form1
         Me.TableLayoutPanel1.SuspendLayout()
         Me.TabPage_log.SuspendLayout()
         Me.SuspendLayout()
+        '
+        'Button_AmbToBasefee
+        '
+        Button_AmbToBasefee.Dock = System.Windows.Forms.DockStyle.Fill
+        Button_AmbToBasefee.Location = New System.Drawing.Point(613, 123)
+        Button_AmbToBasefee.Name = "Button_AmbToBasefee"
+        Button_AmbToBasefee.Size = New System.Drawing.Size(194, 34)
+        Button_AmbToBasefee.TabIndex = 33
+        Button_AmbToBasefee.Text = "Amboss -> Base fee"
+        Button_AmbToBasefee.UseVisualStyleBackColor = True
+        AddHandler Button_AmbToBasefee.Click, AddressOf Me.Button_AmbToBasefee_Click
         '
         'MenuStrip1
         '
@@ -1506,21 +1517,11 @@ Partial Class Form1
         Me.TextBox_message.Size = New System.Drawing.Size(800, 31)
         Me.TextBox_message.TabIndex = 5
         '
-        'Button_AmbToBasefee
-        '
-        Button_AmbToBasefee.Dock = System.Windows.Forms.DockStyle.Fill
-        Button_AmbToBasefee.Location = New System.Drawing.Point(613, 123)
-        Button_AmbToBasefee.Name = "Button_AmbToBasefee"
-        Button_AmbToBasefee.Size = New System.Drawing.Size(194, 34)
-        Button_AmbToBasefee.TabIndex = 33
-        Button_AmbToBasefee.Text = "Amboss -> Base fee"
-        Button_AmbToBasefee.UseVisualStyleBackColor = True
-        AddHandler Button_AmbToBasefee.Click, AddressOf Me.Button_AmbToBasefee_Click
-        '
         'Form1
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(10.0!, 25.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(144.0!, 144.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
+        Me.AutoSize = True
         Me.ClientSize = New System.Drawing.Size(820, 714)
         Me.Controls.Add(Me.TextBox_message)
         Me.Controls.Add(Me.Button_updateChannel)
