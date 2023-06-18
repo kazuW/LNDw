@@ -15,8 +15,8 @@ Public Class Form1
     Public Shared timeout As String
     Public Shared pubkey As String
 
-    Public Shared FeeSetting1(9) As Single
-    Public Shared FeeSetting2(9) As Single
+    Public Shared FeeSetting1(4) As Single
+    Public Shared FeeSetting2(4) As Single
 
     Public Shared AllChannels As ArrayList = New ArrayList
     Public Shared AllChannels_cash As ArrayList = New ArrayList
@@ -56,23 +56,26 @@ Public Class Form1
         uri_path = TextBox_uri.Text
         macaroon_path = TextBox_macaroon.Text
 
-        For i = 0 To 9
+        For i = 0 To 4
             FeeSetting1(i) = 1
             FeeSetting2(i) = 1
             Me.TableLayoutPanel1.Controls("TextBox_Fee1_" + i.ToString).Text = "1"
             Me.TableLayoutPanel1.Controls("TextBox_Fee2_" + i.ToString).Text = "1"
         Next
 
-        TextBox_feeIntervals.Text = "30"
+        TextBox_feeIntervals.Text = "10"
 
-        TextBox_basefee.Text = "1000"
-        TextBox_timelock.Text = "40"
+        TextBox_basefee.Text = "998"
+        TextBox_timelock.Text = "144"
         TextBox_amount_reb.Text = "100000"
-        TextBox_feelimit_reb.Text = "50"
+        TextBox_feelimit_reb.Text = "35"
         TextBox_interval_reb.Text = "10"
         TextBox_repeat_reb.Text = "10"
         TextBox_repeatRoute.Text = "100"
-        TextBox_timeout_reb.Text = "1200" '20 minutes
+        TextBox_timeout_reb.Text = "900" '15 minutes
+
+        TextBox_FeeContRatio.Text = "98"
+        TextBox_MinBaseFeeRate.Text = "50"
 
         TextBox_log.Text += dt + ": Start LNDw" + vbCrLf
 
@@ -151,7 +154,9 @@ Public Class Form1
             tmpChannel.LocalCapRateTarget = {50, 50}
             tmpChannel.BaseFeeRate = 500
             tmpChannel.AutoFeeCont = 0
-
+            tmpChannel.FeeNoflowCount = 0
+            tmpChannel.FeeDuringDec = 0
+            tmpChannel.LocalBalanceDec = 0
 
             AllChannels(i) = tmpChannel
 
@@ -298,13 +303,31 @@ Public Class Form1
                 Case "macaroon_path"
                     TextBox_macaroon.Text = strData(1)
                 Case "control_fee1"
-                    For i = 0 To 9
+                    For i = 0 To 4
                         Me.TableLayoutPanel1.Controls("TextBox_Fee1_" + i.ToString).Text = strData(i + 1)
                     Next
                 Case "control_fee2"
-                    For i = 0 To 9
+                    For i = 0 To 4
                         Me.TableLayoutPanel1.Controls("TextBox_Fee2_" + i.ToString).Text = strData(i + 1)
                     Next
+                Case "auto_fee_interval"
+                    TextBox_feeIntervals.Text = strData(1)
+                Case "base_fee"
+                    TextBox_basefee.Text = strData(1)
+                Case "time_lock"
+                    TextBox_timelock.Text = strData(1)
+                Case "rebalance_amount"
+                    TextBox_amount_reb.Text = strData(1)
+                Case "rebalance_feelimit"
+                    TextBox_feelimit_reb.Text = strData(1)
+                Case "rebalance_interval"
+                    TextBox_interval_reb.Text = strData(1)
+                Case "rebalance_repeat"
+                    TextBox_repeat_reb.Text = strData(1)
+                Case "rebalance_repeat_n"
+                    TextBox_repeatRoute.Text = strData(1)
+                Case "rebalance_timeout"
+                    TextBox_timeout_reb.Text = strData(1)
             End Select
 
             tmpData = Fs.ReadLine
@@ -349,6 +372,7 @@ Public Class Form1
                     tmpChannel.BaseFeeRate = CType(strData(3), Single)
                     tmpChannel.AutoFeeCont = CType(strData(4), Integer)
                     AllChannels_cash(i) = tmpChannel
+                    AllChannels(i) = tmpChannel
 
                     Continue For
                 End If
@@ -621,7 +645,9 @@ reStartRebalance_query:
         End If
 
         listViewUpdate_flag = False
-        TextBox_log.Text += tmpResult
+        If 0 <= tmpResult.IndexOf("SUCCEEDED") Then
+            TextBox_log.Text += tmpResult
+        End If
         TextBox_message.Text = tmpResult
 
     End Sub
@@ -763,7 +789,9 @@ repPayInvoice:
         End If
 
         listViewUpdate_flag = False
-        TextBox_log.Text += tmpResult
+        If 0 <= tmpResult.IndexOf("SUCCEEDED") Then
+            TextBox_log.Text += tmpResult
+        End If
         TextBox_message.Text = tmpResult
 
     End Sub
@@ -1002,6 +1030,12 @@ repPayInvoice:
                 If tmpChannel.ChanID = chkChannel.ChanID Then
                     If (Not tmpChannel.LocalBalance = chkChannel.LocalBalance) And chkChannel.Active Then
 
+                        If chkChannel.LocalBalance < tmpChannel.LocalBalance * 0.98 Then
+                            tmpChannel.LocalBalanceDec = 1
+                        Else
+                            tmpChannel.LocalBalanceDec = 0
+                        End If
+
                         tmpChannel.LocalBalance = chkChannel.LocalBalance
                         tmpChannel.RemoteBalance = chkChannel.RemoteBalance
                         tmpChannel.LocalCapRate = CType(tmpChannel.LocalBalance, Single) / CType(tmpChannel.Capacity, Single) * 100
@@ -1036,8 +1070,10 @@ repPayInvoice:
         Dim TimeLock As String = TextBox_timelock.Text
         Dim feeSetting As Single()
         Dim check_localBalance As Boolean = False
+        Dim MinLocalRatio As Single = CType(TextBox_FeeContRatio.Text, Single)
+        Dim MinBaseFee_para As Single = CType(TextBox_MinBaseFeeRate.Text, Single)
 
-        For i = 0 To 9
+        For i = 0 To 4
             FeeSetting1(i) = CType(Me.TableLayoutPanel1.Controls("TextBox_Fee1_" + i.ToString).Text, Single)
             FeeSetting2(i) = CType(Me.TableLayoutPanel1.Controls("TextBox_Fee2_" + i.ToString).Text, Single)
         Next
@@ -1055,35 +1091,20 @@ repPayInvoice:
 
             Select Case tmpChannel.LocalCapRate
 
-                Case Is <= 10
+                Case Is <= 20
                     fee = tmpChannel.BaseFeeRate / feeSetting(0)
                     HTLC_max = tmpChannel.LocalBalance / 2
-                Case 10 To 20
+                Case 20 To 40
                     fee = tmpChannel.BaseFeeRate / feeSetting(1)
                     HTLC_max = tmpChannel.LocalBalance / 2
-                Case 20 To 30
+                Case 40 To 60
                     fee = tmpChannel.BaseFeeRate / feeSetting(2)
                     HTLC_max = tmpChannel.LocalBalance / 2
-                Case 30 To 40
+                Case 60 To 80
                     fee = tmpChannel.BaseFeeRate / feeSetting(3)
-                    HTLC_max = tmpChannel.LocalBalance / 2
-                Case 40 To 50
-                    fee = tmpChannel.BaseFeeRate / feeSetting(4)
-                    HTLC_max = tmpChannel.LocalBalance / 2
-                Case 50 To 60
-                    fee = tmpChannel.BaseFeeRate / feeSetting(5)
-                    HTLC_max = tmpChannel.LocalBalance / 3
-                Case 60 To 70
-                    fee = tmpChannel.BaseFeeRate / feeSetting(6)
-                    HTLC_max = tmpChannel.LocalBalance / 3
-                Case 70 To 80
-                    fee = tmpChannel.BaseFeeRate / feeSetting(7)
-                    HTLC_max = tmpChannel.LocalBalance / 3
-                Case 80 To 90
-                    fee = tmpChannel.BaseFeeRate / feeSetting(8)
                     HTLC_max = tmpChannel.LocalBalance / 3
                 Case Else
-                    fee = tmpChannel.BaseFeeRate / feeSetting(9)
+                    fee = tmpChannel.BaseFeeRate / feeSetting(4)
                     HTLC_max = tmpChannel.LocalBalance / 3
 
             End Select
@@ -1091,16 +1112,38 @@ repPayInvoice:
             Dim setFeeRate As String = fee.ToString("0")
             Dim setHTLCs As String = HTLC_max.ToString(0) + "000"
             Dim oldFee As String = tmpChannel.LocalFeeRate
+            Dim oldBaseFee As String = tmpChannel.BaseFeeRate.ToString("0")
             Dim newCapRate As String = tmpChannel.LocalCapRate.ToString
 
             tmpChannel.LocalFeeRate = setFeeRate
 
             If Not setFeeRate = oldFee Then
                 Dim res As String = lnd_restApi.postChannelPolicy(tmpChannel.ChanPointID, BaseFee, setFeeRate, setHTLCs, TimeLock)
-                TextBox_log.Text += "*** Update fee " + tmpChannel.AliasName + " :(Old fee=" + oldFee + ") --> (LocalCapRate=" + newCapRate + "%)(New fee=" + setFeeRate + ")" + vbCrLf
+
+                dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
+                TextBox_log.Text += dt + " *** Update fee " + tmpChannel.AliasName + " :(Old fee=" + oldFee + ") --> (LocalCapRate=" + newCapRate + "%)(New fee=" + setFeeRate + ")" + vbCrLf
                 TextBox_message.Text = "*** Update fee " + tmpChannel.AliasName + " :(Old fee=" + oldFee + ") --> (LocalCapRate=" + newCapRate + "%)(New fee=" + setFeeRate + ")"
                 'Else
                 'TextBox_log.Text += "*** No update " + tmpChannel.AliasName + " :(" + oldCapRate + ")(Old fee=" + oldFee + ") --> (" + tmpChannel.LocalCapRate.ToString + ")(New fee=" + setFeeRate + ")" + vbCrLf
+                If tmpChannel.FeeDuringDec >= 1 And tmpChannel.LocalBalanceDec = 1 Then
+                    tmpChannel.BaseFeeRate = tmpChannel.BaseFeeRate / (0.9) ^ tmpChannel.FeeDuringDec
+                    TextBox_log.Text += dt + " *** BasefeeRate restore " + tmpChannel.AliasName + " :(Old Basefee=" + oldBaseFee + ") --> (New Basefee=" + tmpChannel.BaseFeeRate.ToString("0") + ")" + vbCrLf
+                    tmpChannel.FeeDuringDec = 0
+                End If
+
+                tmpChannel.FeeNoflowCount = 0
+
+            ElseIf tmpChannel.FeeNoflowCount <= 12 And tmpChannel.LocalCapRate >= MinLocalRatio Then
+                tmpChannel.FeeNoflowCount += 1
+            ElseIf tmpChannel.FeeNoflowCount > 12 And tmpChannel.BaseFeeRate > MinBaseFee_para Then
+                tmpChannel.BaseFeeRate = tmpChannel.BaseFeeRate * 0.9
+
+                dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
+                TextBox_log.Text += dt + " *** BasefeeRate change " + tmpChannel.AliasName + " :(Old Basefee=" + oldBaseFee + ") --> (New Basefee=" + tmpChannel.BaseFeeRate.ToString("0") + ")" + vbCrLf
+                tmpChannel.FeeNoflowCount = 0
+                tmpChannel.FeeDuringDec += 1
+            Else
+                tmpChannel.FeeNoflowCount = 0
             End If
 
             AutoFeeSet_ChannelsCollection(i) = tmpChannel
@@ -1438,6 +1481,104 @@ repPayInvoice:
         dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
         TextBox_log.Text += dt + ": Copy AMBOSS fee -> Base fee." + vbCrLf
 
+
+    End Sub
+
+    Private Sub SaveAllChannelListToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaveAllChannelListToolStripMenuItem.Click
+
+        Dim Ret As DialogResult
+        Dim FileName As String = "AllChannelList" + DateTime.Now.ToString("yyyyMMddHHmm") + ".txt"
+        Dim Fw As IO.StreamWriter
+        'Dim strData() As String
+
+        SaveFileDialog1.FileName = FileName
+
+        Ret = SaveFileDialog1.ShowDialog()
+        If Ret = DialogResult.Cancel Then
+            Exit Sub
+        End If
+
+        FileName = SaveFileDialog1.FileName
+        Fw = New IO.StreamWriter(FileName, False, System.Text.Encoding.Default)
+
+        Fw.WriteLine("PubKey,ChanID,ChanPointID,Capacity,LocalBalance,RemoteBalance,Active,AliasName,RemoteFeeBase,RemoteFeeRate,RemoteTimelock,LocalFeeBase,LocalFeeRate,LocalTimelock")
+
+        For i = 0 To AllChannels.Count - 1
+
+            Dim tmpChannel As channel = New channel
+            tmpChannel = AllChannels(i)
+            Fw.WriteLine(tmpChannel.PubKey + "," + tmpChannel.ChanID + "," + tmpChannel.ChanPointID + "," + tmpChannel.Capacity + "," + tmpChannel.LocalBalance + "," + tmpChannel.RemoteBalance + "," + tmpChannel.Active.ToString _
+                         + "," + tmpChannel.AliasName + "," + tmpChannel.RemoteFeeBase + "," + tmpChannel.RemoteFeeRate + "," + tmpChannel.RemoteTimelock + "," + tmpChannel.LocalFeeBase + "," + tmpChannel.LocalFeeRate + "," + tmpChannel.LocalTimelock)
+
+        Next
+
+        Fw.Close()
+
+    End Sub
+
+    Private Sub OpenInitialAllChannelListToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenInitialAllChannelListToolStripMenuItem.Click
+
+        Dim Ret As DialogResult
+        Dim FileName As String
+        Dim Fs As IO.StreamReader
+        Dim tmpData As String
+        Dim strData() As String
+
+        AllChannels.Clear()
+
+        Ret = OpenFileDialog1.ShowDialog()
+
+        If Ret = DialogResult.Cancel Then
+            Exit Sub
+        End If
+
+        FileName = IO.Path.GetFullPath(OpenFileDialog1.FileName)
+
+        Fs = New IO.StreamReader(FileName, System.Text.Encoding.Default)
+        tmpData = Fs.ReadLine
+        tmpData = Fs.ReadLine
+
+        Do While tmpData <> Nothing
+
+            strData = tmpData.Split(",")
+
+            Dim tmpChannel As channel = New channel
+
+            tmpChannel.PubKey = strData(0)
+            tmpChannel.ChanID = strData(1)
+            tmpChannel.ChanPointID = strData(2)
+            tmpChannel.Capacity = strData(3)
+            tmpChannel.LocalBalance = strData(4)
+            tmpChannel.RemoteBalance = strData(5)
+            tmpChannel.Active = CType(strData(6), Boolean)
+
+            tmpChannel.AliasName = strData(7)
+            tmpChannel.RemoteFeeBase = strData(8)
+            tmpChannel.RemoteFeeRate = strData(9)
+            tmpChannel.RemoteTimelock = strData(10)
+            tmpChannel.LocalFeeBase = strData(11)
+            tmpChannel.LocalFeeRate = strData(12)
+            tmpChannel.LocalTimelock = strData(13)
+
+            tmpChannel.LocalCapRate = CType(tmpChannel.LocalBalance, Single) / CType(tmpChannel.Capacity, Single) * 100
+            tmpChannel.ChanDirection = ""
+            tmpChannel.LocalCapRateTarget = {70, 30}
+            tmpChannel.BaseFeeRate = 998
+            tmpChannel.AutoFeeCont = 0
+
+            AllChannels.Add(tmpChannel)
+
+            tmpData = Fs.ReadLine
+
+        Loop
+
+        AllChannels.Sort()
+        AllChannels_cash = AllChannels
+
+        dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm")
+        TextBox_log.Text += dt + ": Initial all channels updeate from (" + FileName + ")" + vbCrLf
+        TextBox_message.Text = "channels update done."
+        updateAllChannels()
 
     End Sub
 

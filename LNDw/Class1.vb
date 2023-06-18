@@ -31,7 +31,9 @@ Public Class channel
     Private _baseFeeRate As Single
     Private _ambossFeeRate As String
     Private _active As Boolean
-
+    Private _feeNoflowCount As Integer
+    Private _feeDuringDec As Integer
+    Private _localBalanceDec As Integer
 
     'AliasName
     Public Property AliasName() As String
@@ -230,6 +232,36 @@ Public Class channel
         End Get
         Set(ByVal value As Boolean)
             Me._active = value
+        End Set
+    End Property
+
+    'FeeNoflowCount
+    Public Property FeeNoflowCount() As Integer
+        Get
+            Return Me._feeNoflowCount
+        End Get
+        Set(ByVal value As Integer)
+            Me._feeNoflowCount = value
+        End Set
+    End Property
+
+    'FeeDuringDec
+    Public Property FeeDuringDec() As Integer
+        Get
+            Return Me._feeDuringDec
+        End Get
+        Set(ByVal value As Integer)
+            Me._feeDuringDec = value
+        End Set
+    End Property
+
+    'FeeDuringDec
+    Public Property LocalBalanceDec() As Integer
+        Get
+            Return Me._localBalanceDec
+        End Get
+        Set(ByVal value As Integer)
+            Me._localBalanceDec = value
         End Set
     End Property
 
